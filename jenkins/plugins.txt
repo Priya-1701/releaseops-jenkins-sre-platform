@@ -1,0 +1,14 @@
+blueocean
+workflow-aggregator
+pipeline-stage-view
+git
+github
+github-branch-source
+credentials
+credentials-binding
+docker-workflow
+ssh-agent
+timestamper
+ansicolor
+junit
+ws-cleanup

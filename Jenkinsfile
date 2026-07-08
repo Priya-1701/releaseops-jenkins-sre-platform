@@ -53,6 +53,9 @@ pipeline {
                     echo "Registry Docker image:"
                     echo "${REGISTRY_IMAGE}"
 
+                    echo "Latest Docker image:"
+                    echo "${REGISTRY_IMAGE_LATEST}"
+
                     echo "Repository files:"
                     ls -la
                 '''
@@ -183,25 +186,40 @@ pipeline {
 
         stage('Push Docker Image to DockerHub') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKERHUB_USERNAME',
-                    passwordVariable: 'DOCKERHUB_TOKEN'
-                )]) {
-                    sh '''
-                        set +x
+                retry(3) {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKERHUB_USERNAME',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )]) {
+                        sh '''
+                            set +x
+                            set -e
 
-                        echo "Logging in to DockerHub as ${DOCKERHUB_USERNAME}..."
-                        echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+                            export DOCKER_CONFIG="${WORKSPACE}/.docker"
 
-                        echo "Pushing versioned image: ${REGISTRY_IMAGE}"
-                        docker push ${REGISTRY_IMAGE}
+                            rm -rf "${DOCKER_CONFIG}"
+                            mkdir -p "${DOCKER_CONFIG}"
 
-                        echo "Pushing latest image: ${REGISTRY_IMAGE_LATEST}"
-                        docker push ${REGISTRY_IMAGE_LATEST}
+                            cleanup_docker_auth() {
+                              docker logout docker.io >/dev/null 2>&1 || true
+                              rm -rf "${DOCKER_CONFIG}"
+                            }
 
-                        docker logout
-                    '''
+                            trap cleanup_docker_auth EXIT
+
+                            echo "Logging in to DockerHub as ${DOCKERHUB_USERNAME}..."
+                            echo "${DOCKERHUB_TOKEN}" | docker login docker.io -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+                            echo "Pushing versioned image: ${REGISTRY_IMAGE}"
+                            docker push ${REGISTRY_IMAGE}
+
+                            echo "Pushing latest image: ${REGISTRY_IMAGE_LATEST}"
+                            docker push ${REGISTRY_IMAGE_LATEST}
+
+                            echo "DockerHub push completed successfully."
+                        '''
+                    }
                 }
             }
         }

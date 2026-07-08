@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: incident-prod
+
+resources:
+  - ../../base
+
+images:
+  - name: incident-api
+    newName: docker.io/priyanka1701/incident-api
+    newTag: phase-5-6656334
+
+configMapGenerator:
+  - name: incident-api-config
+    literals:
+      - APP_NAME=incident-api
+      - APP_ENV=prod
+      - APP_VERSION=phase-5-6656334
+      - FORCE_UNREADY=false
+
+replicas:
+  - name: incident-api
+    count: 2

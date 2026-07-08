@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: incident-prod
+  labels:
+    app.kubernetes.io/part-of: releaseops
+    app.kubernetes.io/environment: prod

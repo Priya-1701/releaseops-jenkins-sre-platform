@@ -14,6 +14,7 @@ pipeline {
         APP_NAME = 'incident-api'
         PYTHON_VENV = '.venv'
         DOCKER_IMAGE_LOCAL = 'incident-api'
+        DOCKERHUB_REPOSITORY = 'docker.io/priyanka1701/incident-api'
         CI_REPORT_DIR = 'reports/ci'
         TRIVY_DISABLE_VEX_NOTICE = 'true'
     }
@@ -31,6 +32,9 @@ pipeline {
                     ).trim()
 
                     env.IMAGE_TAG = "ci-${env.BUILD_NUMBER}-${env.GIT_SHORT_SHA}"
+                    env.LOCAL_IMAGE = "${env.DOCKER_IMAGE_LOCAL}:${env.IMAGE_TAG}"
+                    env.REGISTRY_IMAGE = "${env.DOCKERHUB_REPOSITORY}:${env.IMAGE_TAG}"
+                    env.REGISTRY_IMAGE_LATEST = "${env.DOCKERHUB_REPOSITORY}:latest"
                 }
 
                 sh '''
@@ -43,8 +47,11 @@ pipeline {
                     echo "Git commit:"
                     git rev-parse --short HEAD
 
-                    echo "Docker image tag:"
-                    echo "${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}"
+                    echo "Local Docker image:"
+                    echo "${LOCAL_IMAGE}"
+
+                    echo "Registry Docker image:"
+                    echo "${REGISTRY_IMAGE}"
 
                     echo "Repository files:"
                     ls -la
@@ -121,7 +128,7 @@ pipeline {
                     echo "Building Docker image..."
                     docker build \
                       -f docker/Dockerfile \
-                      -t ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG} \
+                      -t ${LOCAL_IMAGE} \
                       .
 
                     echo "Docker image built:"
@@ -144,7 +151,7 @@ pipeline {
                       --no-progress \
                       --format json \
                       --output ${CI_REPORT_DIR}/trivy-image-report.json \
-                      ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}
+                      ${LOCAL_IMAGE}
 
                     echo "Running blocking Trivy scan for fixable CRITICAL vulnerabilities..."
                     trivy image \
@@ -154,8 +161,48 @@ pipeline {
                       --severity CRITICAL \
                       --no-progress \
                       --format table \
-                      ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}
+                      ${LOCAL_IMAGE}
                 '''
+            }
+        }
+
+        stage('Tag DockerHub Images') {
+            steps {
+                sh '''
+                    set -e
+
+                    echo "Tagging local image for DockerHub..."
+                    docker tag ${LOCAL_IMAGE} ${REGISTRY_IMAGE}
+                    docker tag ${LOCAL_IMAGE} ${REGISTRY_IMAGE_LATEST}
+
+                    echo "DockerHub image tags prepared:"
+                    docker image ls ${DOCKERHUB_REPOSITORY}
+                '''
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKERHUB_USERNAME',
+                    passwordVariable: 'DOCKERHUB_TOKEN'
+                )]) {
+                    sh '''
+                        set +x
+
+                        echo "Logging in to DockerHub as ${DOCKERHUB_USERNAME}..."
+                        echo "${DOCKERHUB_TOKEN}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+                        echo "Pushing versioned image: ${REGISTRY_IMAGE}"
+                        docker push ${REGISTRY_IMAGE}
+
+                        echo "Pushing latest image: ${REGISTRY_IMAGE_LATEST}"
+                        docker push ${REGISTRY_IMAGE_LATEST}
+
+                        docker logout
+                    '''
+                }
             }
         }
 
@@ -171,8 +218,11 @@ pipeline {
   "application": "${APP_NAME}",
   "jenkins_build_number": "${BUILD_NUMBER}",
   "git_commit_short": "${GIT_SHORT_SHA}",
-  "image": "${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}",
-  "pipeline_type": "ci",
+  "local_image": "${LOCAL_IMAGE}",
+  "registry_image": "${REGISTRY_IMAGE}",
+  "latest_image": "${REGISTRY_IMAGE_LATEST}",
+  "dockerhub_repository": "${DOCKERHUB_REPOSITORY}",
+  "pipeline_type": "ci-registry",
   "result": "success"
 }
 JSON
@@ -186,11 +236,11 @@ JSON
 
     post {
         success {
-            echo 'CI pipeline completed successfully.'
+            echo 'CI registry pipeline completed successfully.'
         }
 
         failure {
-            echo 'CI pipeline failed. Check the failed stage and console output.'
+            echo 'CI registry pipeline failed. Check the failed stage and console output.'
         }
 
         always {
@@ -200,6 +250,9 @@ JSON
 
                 echo "Docker images for incident-api:"
                 docker image ls incident-api || true
+
+                echo "DockerHub tagged images:"
+                docker image ls ${DOCKERHUB_REPOSITORY} || true
             '''
 
             archiveArtifacts artifacts: 'reports/ci/*', fingerprint: true, allowEmptyArchive: true

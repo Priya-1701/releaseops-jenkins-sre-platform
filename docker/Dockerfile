@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
 LABEL org.opencontainers.image.title="incident-api"
 LABEL org.opencontainers.image.description="SRE-focused FastAPI workload for ReleaseOps Jenkins CI/CD platform"

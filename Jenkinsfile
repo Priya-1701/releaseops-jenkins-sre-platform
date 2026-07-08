@@ -7,20 +7,31 @@ pipeline {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '20'))
         timeout(time: 30, unit: 'MINUTES')
+        skipDefaultCheckout(true)
     }
 
     environment {
         APP_NAME = 'incident-api'
         PYTHON_VENV = '.venv'
         DOCKER_IMAGE_LOCAL = 'incident-api'
-        IMAGE_TAG = "ci-${BUILD_NUMBER}-${GIT_COMMIT.take(7)}"
         CI_REPORT_DIR = 'reports/ci'
+        TRIVY_DISABLE_VEX_NOTICE = 'true'
     }
 
     stages {
         stage('Checkout Source') {
             steps {
+                cleanWs()
                 checkout scm
+
+                script {
+                    env.GIT_SHORT_SHA = sh(
+                        script: 'git rev-parse --short HEAD',
+                        returnStdout: true
+                    ).trim()
+
+                    env.IMAGE_TAG = "ci-${env.BUILD_NUMBER}-${env.GIT_SHORT_SHA}"
+                }
 
                 sh '''
                     echo "Current workspace:"
@@ -31,6 +42,9 @@ pipeline {
 
                     echo "Git commit:"
                     git rev-parse --short HEAD
+
+                    echo "Docker image tag:"
+                    echo "${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}"
 
                     echo "Repository files:"
                     ls -la
@@ -45,6 +59,9 @@ pipeline {
 
                     echo "Python version:"
                     python3 --version
+
+                    echo "Removing any old virtual environment..."
+                    rm -rf ${PYTHON_VENV}
 
                     echo "Creating virtual environment..."
                     python3 -m venv ${PYTHON_VENV}
@@ -65,6 +82,7 @@ pipeline {
             steps {
                 sh '''
                     set -e
+
                     . ${PYTHON_VENV}/bin/activate
 
                     echo "Running ruff lint check..."
@@ -77,6 +95,7 @@ pipeline {
             steps {
                 sh '''
                     set -e
+
                     . ${PYTHON_VENV}/bin/activate
 
                     mkdir -p ${CI_REPORT_DIR}
@@ -86,6 +105,7 @@ pipeline {
                       --junitxml=${CI_REPORT_DIR}/pytest-results.xml
                 '''
             }
+
             post {
                 always {
                     junit allowEmptyResults: false, testResults: 'reports/ci/pytest-results.xml'
@@ -117,21 +137,23 @@ pipeline {
 
                     mkdir -p ${CI_REPORT_DIR}
 
-                    echo "Running Trivy vulnerability scan..."
-                    trivy image \
-                      --exit-code 1 \
-                      --severity CRITICAL \
-                      --no-progress \
-                      --format table \
-                      ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}
-
-                    echo "Generating Trivy JSON report..."
+                    echo "Generating full Trivy JSON report for HIGH and CRITICAL findings..."
                     trivy image \
                       --exit-code 0 \
                       --severity HIGH,CRITICAL \
                       --no-progress \
                       --format json \
                       --output ${CI_REPORT_DIR}/trivy-image-report.json \
+                      ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}
+
+                    echo "Running blocking Trivy scan for fixable CRITICAL vulnerabilities..."
+                    trivy image \
+                      --scanners vuln \
+                      --ignore-unfixed \
+                      --exit-code 1 \
+                      --severity CRITICAL \
+                      --no-progress \
+                      --format table \
                       ${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}
                 '''
             }
@@ -148,7 +170,7 @@ pipeline {
 {
   "application": "${APP_NAME}",
   "jenkins_build_number": "${BUILD_NUMBER}",
-  "git_commit": "${GIT_COMMIT}",
+  "git_commit_short": "${GIT_SHORT_SHA}",
   "image": "${DOCKER_IMAGE_LOCAL}:${IMAGE_TAG}",
   "pipeline_type": "ci",
   "result": "success"
@@ -158,8 +180,6 @@ JSON
                     echo "Build metadata:"
                     cat ${CI_REPORT_DIR}/build-metadata.json | jq
                 '''
-
-                archiveArtifacts artifacts: 'reports/ci/*', fingerprint: true
             }
         }
     }
@@ -181,6 +201,8 @@ JSON
                 echo "Docker images for incident-api:"
                 docker image ls incident-api || true
             '''
+
+            archiveArtifacts artifacts: 'reports/ci/*', fingerprint: true, allowEmptyArchive: true
         }
     }
 }

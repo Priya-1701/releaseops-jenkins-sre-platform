@@ -1,0 +1,527 @@
+Started by user Priyanka Sagalgile
+
+Obtained Jenkinsfile from git https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/releaseops-ci-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/releaseops-ci-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git # timeout=10
+Fetching upstream changes from https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 7eee3e53c5b1b3fcaf7cb50b45a9258ee8010192 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 7eee3e53c5b1b3fcaf7cb50b45a9258ee8010192 # timeout=10
+Commit message: "feat: add Jenkins CI pipeline"
+ > git rev-list --no-walk 7eee3e53c5b1b3fcaf7cb50b45a9258ee8010192 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] ansiColor
+[Pipeline] {
+20:21:41  
+[Pipeline] timeout
+20:21:41  Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Source)
+[Pipeline] checkout
+20:21:41  The recommended git tool is: git
+20:21:41  No credentials specified
+20:21:41   > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/releaseops-ci-pipeline/.git # timeout=10
+20:21:41  Fetching changes from the remote Git repository
+20:21:41   > git config remote.origin.url https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git # timeout=10
+20:21:41  Fetching upstream changes from https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+20:21:41   > git --version # timeout=10
+20:21:41   > git --version # 'git version 2.47.3'
+20:21:41   > git fetch --tags --force --progress -- https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+20:21:42   > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+20:21:42  Checking out Revision 7eee3e53c5b1b3fcaf7cb50b45a9258ee8010192 (refs/remotes/origin/main)
+20:21:42   > git config core.sparsecheckout # timeout=10
+20:21:42   > git checkout -f 7eee3e53c5b1b3fcaf7cb50b45a9258ee8010192 # timeout=10
+20:21:42  Commit message: "feat: add Jenkins CI pipeline"
+[Pipeline] sh
+20:21:42  + echo Current workspace:
+20:21:42  Current workspace:
+20:21:42  + pwd
+20:21:42  /var/jenkins_home/workspace/releaseops-ci-pipeline
+20:21:42  + echo Git branch:
+20:21:42  Git branch:
+20:21:42  + git branch --show-current
+20:21:42  + echo Git commit:
+20:21:42  Git commit:
+20:21:42  + git rev-parse --short HEAD
+20:21:42  7eee3e5
+20:21:42  + echo Repository files:
+20:21:42  Repository files:
+20:21:42  + ls -la
+20:21:42  total 80
+20:21:42  drwxr-xr-x 14 jenkins jenkins 4096 Jul  8 14:38 .
+20:21:42  drwxr-xr-x  8 jenkins jenkins 4096 Jul  8 14:38 ..
+20:21:42  -rw-r--r--  1 jenkins jenkins  443 Jul  8 14:38 .dockerignore
+20:21:42  drwxr-xr-x  8 jenkins jenkins 4096 Jul  8 14:51 .git
+20:21:42  -rw-r--r--  1 jenkins jenkins  442 Jul  8 14:38 .gitignore
+20:21:42  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 .pytest_cache
+20:21:42  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 .ruff_cache
+20:21:42  drwxr-xr-x  5 jenkins jenkins 4096 Jul  8 14:38 .venv
+20:21:42  -rw-r--r--  1 jenkins jenkins 5060 Jul  8 14:38 Jenkinsfile
+20:21:42  -rw-r--r--  1 jenkins jenkins 1449 Jul  8 14:38 README.md
+20:21:42  drwxr-xr-x  4 jenkins jenkins 4096 Jul  8 14:38 app
+20:21:42  drwxr-xr-x  2 jenkins jenkins 4096 Jul  8 14:38 docker
+20:21:42  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 docs
+20:21:42  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 jenkins
+20:21:42  drwxr-xr-x  7 jenkins jenkins 4096 Jul  8 14:38 k8s
+20:21:42  drwxr-xr-x  4 jenkins jenkins 4096 Jul  8 14:38 monitoring
+20:21:42  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 reports
+20:21:42  drwxr-xr-x  2 jenkins jenkins 4096 Jul  8 14:38 scripts
+20:21:42  -rw-r--r--  1 jenkins jenkins 1757 Jul  8 14:38 ~
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Prepare Python Environment)
+[Pipeline] sh
+20:21:43  + set -e
+20:21:43  + echo Python version:
+20:21:43  Python version:
+20:21:43  + python3 --version
+20:21:43  Python 3.13.5
+20:21:43  + echo Creating virtual environment...
+20:21:43  Creating virtual environment...
+20:21:43  + python3 -m venv .venv
+20:21:43  + echo Activating virtual environment and installing dependencies...
+20:21:43  Activating virtual environment and installing dependencies...
+20:21:43  + . .venv/bin/activate
+20:21:43  + deactivate nondestructive
+20:21:43  + [ -n  ]
+20:21:43  + [ -n  ]
+20:21:43  + hash -r
+20:21:43  + [ -n  ]
+20:21:43  + unset VIRTUAL_ENV
+20:21:43  + unset VIRTUAL_ENV_PROMPT
+20:21:43  + [ ! nondestructive = nondestructive ]
+20:21:43  + uname
+20:21:43  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+20:21:43  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:43  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:43  + export PATH
+20:21:43  + VIRTUAL_ENV_PROMPT=.venv
+20:21:43  + export VIRTUAL_ENV_PROMPT
+20:21:43  + [ -n  ]
+20:21:43  + [ -z  ]
+20:21:43  + _OLD_VIRTUAL_PS1=$ 
+20:21:43  + PS1=(.venv) $ 
+20:21:43  + export PS1
+20:21:43  + hash -r
+20:21:43  + python -m pip install --upgrade pip
+20:21:43  Requirement already satisfied: pip in ./.venv/lib/python3.13/site-packages (26.1.2)
+20:21:44  + python -m pip install -r app/requirements-dev.txt
+20:21:44  Requirement already satisfied: fastapi in ./.venv/lib/python3.13/site-packages (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (0.139.0)
+20:21:44  Requirement already satisfied: prometheus-client in ./.venv/lib/python3.13/site-packages (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 3)) (0.25.0)
+20:21:44  Requirement already satisfied: pytest in ./.venv/lib/python3.13/site-packages (from -r app/requirements-dev.txt (line 2)) (9.1.1)
+20:21:44  Requirement already satisfied: httpx in ./.venv/lib/python3.13/site-packages (from -r app/requirements-dev.txt (line 3)) (0.28.1)
+20:21:44  Requirement already satisfied: ruff in ./.venv/lib/python3.13/site-packages (from -r app/requirements-dev.txt (line 4)) (0.15.20)
+20:21:44  Requirement already satisfied: uvicorn[standard] in ./.venv/lib/python3.13/site-packages (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (0.51.0)
+20:21:44  Requirement already satisfied: starlette>=0.46.0 in ./.venv/lib/python3.13/site-packages (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (1.3.1)
+20:21:44  Requirement already satisfied: pydantic>=2.9.0 in ./.venv/lib/python3.13/site-packages (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (2.13.4)
+20:21:44  Requirement already satisfied: typing-extensions>=4.8.0 in ./.venv/lib/python3.13/site-packages (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (4.16.0)
+20:21:44  Requirement already satisfied: typing-inspection>=0.4.2 in ./.venv/lib/python3.13/site-packages (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (0.4.2)
+20:21:44  Requirement already satisfied: annotated-doc>=0.0.2 in ./.venv/lib/python3.13/site-packages (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (0.0.4)
+20:21:44  Requirement already satisfied: click>=7.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (8.4.2)
+20:21:44  Requirement already satisfied: h11>=0.8 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (0.16.0)
+20:21:44  Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (0.8.0)
+20:21:44  Requirement already satisfied: python-dotenv>=0.13 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (1.2.2)
+20:21:44  Requirement already satisfied: pyyaml>=5.1 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (6.0.3)
+20:21:44  Requirement already satisfied: uvloop>=0.15.1 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (0.22.1)
+20:21:44  Requirement already satisfied: watchfiles>=0.20 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (1.2.0)
+20:21:44  Requirement already satisfied: websockets>=13.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2)) (16.0)
+20:21:44  Requirement already satisfied: iniconfig>=1.0.1 in ./.venv/lib/python3.13/site-packages (from pytest->-r app/requirements-dev.txt (line 2)) (2.3.0)
+20:21:44  Requirement already satisfied: packaging>=22 in ./.venv/lib/python3.13/site-packages (from pytest->-r app/requirements-dev.txt (line 2)) (26.2)
+20:21:44  Requirement already satisfied: pluggy<2,>=1.5 in ./.venv/lib/python3.13/site-packages (from pytest->-r app/requirements-dev.txt (line 2)) (1.6.0)
+20:21:44  Requirement already satisfied: pygments>=2.7.2 in ./.venv/lib/python3.13/site-packages (from pytest->-r app/requirements-dev.txt (line 2)) (2.20.0)
+20:21:44  Requirement already satisfied: anyio in ./.venv/lib/python3.13/site-packages (from httpx->-r app/requirements-dev.txt (line 3)) (4.14.1)
+20:21:44  Requirement already satisfied: certifi in ./.venv/lib/python3.13/site-packages (from httpx->-r app/requirements-dev.txt (line 3)) (2026.6.17)
+20:21:44  Requirement already satisfied: httpcore==1.* in ./.venv/lib/python3.13/site-packages (from httpx->-r app/requirements-dev.txt (line 3)) (1.0.9)
+20:21:44  Requirement already satisfied: idna in ./.venv/lib/python3.13/site-packages (from httpx->-r app/requirements-dev.txt (line 3)) (3.18)
+20:21:44  Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.13/site-packages (from pydantic>=2.9.0->fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (0.7.0)
+20:21:44  Requirement already satisfied: pydantic-core==2.46.4 in ./.venv/lib/python3.13/site-packages (from pydantic>=2.9.0->fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1)) (2.46.4)
+20:21:44  + echo Installed Python packages:
+20:21:44  Installed Python packages:
+20:21:44  + python -m pip freeze
+20:21:44  annotated-doc==0.0.4
+20:21:44  annotated-types==0.7.0
+20:21:44  anyio==4.14.1
+20:21:44  certifi==2026.6.17
+20:21:44  click==8.4.2
+20:21:44  fastapi==0.139.0
+20:21:44  h11==0.16.0
+20:21:44  httpcore==1.0.9
+20:21:44  httptools==0.8.0
+20:21:44  httpx==0.28.1
+20:21:44  idna==3.18
+20:21:44  iniconfig==2.3.0
+20:21:44  packaging==26.2
+20:21:44  pluggy==1.6.0
+20:21:44  prometheus_client==0.25.0
+20:21:44  pydantic==2.13.4
+20:21:44  pydantic_core==2.46.4
+20:21:44  Pygments==2.20.0
+20:21:44  pytest==9.1.1
+20:21:44  python-dotenv==1.2.2
+20:21:44  PyYAML==6.0.3
+20:21:44  ruff==0.15.20
+20:21:44  starlette==1.3.1
+20:21:44  typing-inspection==0.4.2
+20:21:44  typing_extensions==4.16.0
+20:21:44  uvicorn==0.51.0
+20:21:44  uvloop==0.22.1
+20:21:44  watchfiles==1.2.0
+20:21:44  websockets==16.0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Lint Code)
+[Pipeline] sh
+20:21:44  + set -e
+20:21:44  + . .venv/bin/activate
+20:21:44  + deactivate nondestructive
+20:21:44  + [ -n  ]
+20:21:44  + [ -n  ]
+20:21:44  + hash -r
+20:21:44  + [ -n  ]
+20:21:44  + unset VIRTUAL_ENV
+20:21:44  + unset VIRTUAL_ENV_PROMPT
+20:21:44  + [ ! nondestructive = nondestructive ]
+20:21:44  + uname
+20:21:44  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+20:21:44  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:44  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:44  + export PATH
+20:21:44  + VIRTUAL_ENV_PROMPT=.venv
+20:21:44  + export VIRTUAL_ENV_PROMPT
+20:21:44  + [ -n  ]
+20:21:44  + [ -z  ]
+20:21:44  + _OLD_VIRTUAL_PS1=$ 
+20:21:44  + PS1=(.venv) $ 
+20:21:44  + export PS1
+20:21:44  + hash -r
+20:21:44  + echo Running ruff lint check...
+20:21:44  Running ruff lint check...
+20:21:44  + python -m ruff check app
+20:21:44  All checks passed!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Unit Tests)
+[Pipeline] sh
+20:21:45  + set -e
+20:21:45  + . .venv/bin/activate
+20:21:45  + deactivate nondestructive
+20:21:45  + [ -n  ]
+20:21:45  + [ -n  ]
+20:21:45  + hash -r
+20:21:45  + [ -n  ]
+20:21:45  + unset VIRTUAL_ENV
+20:21:45  + unset VIRTUAL_ENV_PROMPT
+20:21:45  + [ ! nondestructive = nondestructive ]
+20:21:45  + uname
+20:21:45  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+20:21:45  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:45  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+20:21:45  + export PATH
+20:21:45  + VIRTUAL_ENV_PROMPT=.venv
+20:21:45  + export VIRTUAL_ENV_PROMPT
+20:21:45  + [ -n  ]
+20:21:45  + [ -z  ]
+20:21:45  + _OLD_VIRTUAL_PS1=$ 
+20:21:45  + PS1=(.venv) $ 
+20:21:45  + export PS1
+20:21:45  + hash -r
+20:21:45  + mkdir -p reports/ci
+20:21:45  + echo Running pytest...
+20:21:45  Running pytest...
+20:21:45  + python -m pytest app/tests --junitxml=reports/ci/pytest-results.xml
+20:21:45  ============================= test session starts ==============================
+20:21:45  platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0
+20:21:45  rootdir: /var/jenkins_home/workspace/releaseops-ci-pipeline
+20:21:45  plugins: anyio-4.14.1
+20:21:45  collected 7 items
+20:21:45  
+20:21:45  app/tests/test_incident_api.py .......                                   [100%]
+20:21:45  
+20:21:45  =============================== warnings summary ===============================
+20:21:45  .venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+20:21:45    /var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+20:21:45      from starlette.testclient import TestClient as TestClient  # noqa
+20:21:45  
+20:21:45  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+20:21:45  - generated xml file: /var/jenkins_home/workspace/releaseops-ci-pipeline/reports/ci/pytest-results.xml -
+20:21:45  ========================= 7 passed, 1 warning in 0.25s =========================
+Post stage
+[Pipeline] junit
+20:21:45  Recording test results
+20:21:45  [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] sh
+20:21:45  + set -e
+20:21:45  + echo Building Docker image...
+20:21:45  Building Docker image...
+20:21:45  + docker build -f docker/Dockerfile -t incident-api:ci-2-7eee3e5 .
+20:21:45  DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+20:21:45              Install the buildx component to build images with BuildKit:
+20:21:45              https://docs.docker.com/go/buildx/
+20:21:45  
+20:21:45  Sending build context to Docker daemon  59.39kB
+20:21:45  
+20:21:45  Step 1/22 : FROM python:3.12-slim
+20:21:45   ---> a70ea0ba498b
+20:21:45  Step 2/22 : LABEL org.opencontainers.image.title="incident-api"
+20:21:45   ---> Using cache
+20:21:45   ---> d3fcbbd06188
+20:21:45  Step 3/22 : LABEL org.opencontainers.image.description="SRE-focused FastAPI workload for ReleaseOps Jenkins CI/CD platform"
+20:21:45   ---> Using cache
+20:21:45   ---> afc8244f9b4b
+20:21:45  Step 4/22 : LABEL org.opencontainers.image.source="releaseops-jenkins-sre-platform"
+20:21:45   ---> Using cache
+20:21:45   ---> 2bf32d4f8eed
+20:21:45  Step 5/22 : LABEL org.opencontainers.image.vendor="ReleaseOps"
+20:21:45   ---> Using cache
+20:21:45   ---> 2ef2b5ba0824
+20:21:45  Step 6/22 : LABEL org.opencontainers.image.version="0.1.0"
+20:21:45   ---> Using cache
+20:21:45   ---> df7b14e36cc8
+20:21:45  Step 7/22 : ENV PYTHONDONTWRITEBYTECODE=1
+20:21:45   ---> Using cache
+20:21:45   ---> f5e1ad3a3afa
+20:21:45  Step 8/22 : ENV PYTHONUNBUFFERED=1
+20:21:45   ---> Using cache
+20:21:45   ---> 8c58100699c4
+20:21:45  Step 9/22 : ENV APP_NAME=incident-api
+20:21:45   ---> Using cache
+20:21:45   ---> a4ab4ea1fcde
+20:21:45  Step 10/22 : ENV APP_VERSION=0.1.0
+20:21:45   ---> Using cache
+20:21:45   ---> bf9ac0630562
+20:21:45  Step 11/22 : ENV APP_ENV=container
+20:21:45   ---> Using cache
+20:21:45   ---> f0550bb3f2b7
+20:21:45  Step 12/22 : ENV PORT=8000
+20:21:45   ---> Using cache
+20:21:45   ---> c9f3bdf1d413
+20:21:45  Step 13/22 : WORKDIR /service
+20:21:45   ---> Using cache
+20:21:45   ---> d40263f6a4a7
+20:21:45  Step 14/22 : RUN addgroup --system appgroup     && adduser --system --ingroup appgroup --home /service appuser
+20:21:45   ---> Using cache
+20:21:45   ---> 5a941d84c25b
+20:21:45  Step 15/22 : COPY app/requirements.txt /service/app/requirements.txt
+20:21:45   ---> Using cache
+20:21:45   ---> 9075325b1866
+20:21:45  Step 16/22 : RUN python -m pip install --no-cache-dir --upgrade pip     && python -m pip install --no-cache-dir -r /service/app/requirements.txt
+20:21:45   ---> Using cache
+20:21:45   ---> ed944fc9f604
+20:21:45  Step 17/22 : COPY app /service/app
+20:21:45   ---> Using cache
+20:21:45   ---> 0c89b52dca72
+20:21:45  Step 18/22 : RUN chown -R appuser:appgroup /service
+20:21:45   ---> Using cache
+20:21:45   ---> f33e9c22d28e
+20:21:45  Step 19/22 : USER appuser
+20:21:45   ---> Using cache
+20:21:45   ---> 6e0710458005
+20:21:45  Step 20/22 : EXPOSE 8000
+20:21:45   ---> Using cache
+20:21:45   ---> 4402aa002f39
+20:21:45  Step 21/22 : HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)" || exit 1
+20:21:45   ---> Using cache
+20:21:45   ---> a1b50f6e9f8e
+20:21:45  Step 22/22 : CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+20:21:45   ---> Using cache
+20:21:45   ---> 24ce8755aab4
+20:21:45  Successfully built 24ce8755aab4
+20:21:45  Successfully tagged incident-api:ci-2-7eee3e5
+20:21:45  + echo Docker image built:
+20:21:45  Docker image built:
+20:21:45  + docker image ls incident-api
+20:21:45  IMAGE                       ID             DISK USAGE   CONTENT SIZE   EXTRA
+20:21:45  incident-api:ci-1-7eee3e5   24ce8755aab4        195MB             0B        
+20:21:45  incident-api:ci-2-7eee3e5   24ce8755aab4        195MB             0B        
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Scan Docker Image)
+[Pipeline] sh
+20:21:46  + set -e
+20:21:46  + mkdir -p reports/ci
+20:21:46  + echo Running Trivy vulnerability scan...
+20:21:46  Running Trivy vulnerability scan...
+20:21:46  + trivy image --exit-code 1 --severity CRITICAL --no-progress --format table incident-api:ci-2-7eee3e5
+20:21:46  2026-07-08T14:51:45Z	INFO	[vuln] Vulnerability scanning is enabled
+20:21:46  2026-07-08T14:51:45Z	INFO	[secret] Secret scanning is enabled
+20:21:46  2026-07-08T14:51:45Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+20:21:46  2026-07-08T14:51:45Z	INFO	[secret] Please see https://trivy.dev/docs/v0.72/guide/scanner/secret#recommendation for faster secret detection
+20:21:46  2026-07-08T14:51:46Z	INFO	Detected OS	family="debian" version="13.5"
+20:21:46  2026-07-08T14:51:46Z	INFO	[debian] Detecting vulnerabilities...	os_version="13" pkg_num=87
+20:21:46  2026-07-08T14:51:46Z	INFO	Number of language-specific files	num=1
+20:21:46  2026-07-08T14:51:46Z	INFO	[python-pkg] Detecting vulnerabilities...
+20:21:46  2026-07-08T14:51:46Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.72/guide/scanner/vulnerability#severity-selection for details.
+20:21:46  
+20:21:46  Report Summary
+20:21:46  
+20:21:46  ┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+20:21:46  │                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ incident-api:ci-2-7eee3e5 (debian 13.5)                                          │   debian   │        2        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/annotated_doc-0.0.4.dist-info/METADATA    │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/annotated_types-0.7.0.dist-info/METADATA  │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/anyio-4.14.1.dist-info/METADATA           │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/click-8.4.2.dist-info/METADATA            │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/fastapi-0.139.0.dist-info/METADATA        │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/h11-0.16.0.dist-info/METADATA             │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/httptools-0.8.0.dist-info/METADATA        │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/idna-3.18.dist-info/METADATA              │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/pip-26.1.2.dist-info/METADATA             │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/prometheus_client-0.25.0.dist-info/METAD- │ python-pkg │        0        │    -    │
+20:21:46  │ ATA                                                                              │            │                 │         │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/pydantic-2.13.4.dist-info/METADATA        │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/pydantic_core-2.46.4.dist-info/METADATA   │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/python_dotenv-1.2.2.dist-info/METADATA    │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/pyyaml-6.0.3.dist-info/METADATA           │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/starlette-1.3.1.dist-info/METADATA        │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/typing_extensions-4.16.0.dist-info/METAD- │ python-pkg │        0        │    -    │
+20:21:46  │ ATA                                                                              │            │                 │         │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/typing_inspection-0.4.2.dist-info/METADA- │ python-pkg │        0        │    -    │
+20:21:46  │ TA                                                                               │            │                 │         │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/uvicorn-0.51.0.dist-info/METADATA         │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/uvloop-0.22.1.dist-info/METADATA          │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/watchfiles-1.2.0.dist-info/METADATA       │ python-pkg │        0        │    -    │
+20:21:46  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+20:21:46  │ usr/local/lib/python3.12/site-packages/websockets-16.0.dist-info/METADATA        │ python-pkg │        0        │    -    │
+20:21:46  └──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+20:21:46  Legend:
+20:21:46  - '-': Not scanned
+20:21:46  - '0': Clean (no security findings detected)
+20:21:46  
+20:21:46  
+20:21:46  For OSS Maintainers: VEX Notice
+20:21:46  --------------------------------
+20:21:46  If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+20:21:46  VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+20:21:46  Learn more and start using VEX: https://trivy.dev/docs/v0.72/guide/supply-chain/vex/repo#publishing-vex-documents
+20:21:46  
+20:21:46  To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+20:21:46  
+20:21:46  
+20:21:46  incident-api:ci-2-7eee3e5 (debian 13.5)
+20:21:46  =======================================
+20:21:46  Total: 2 (CRITICAL: 2)
+20:21:46  
+20:21:46  ┌───────────┬────────────────┬──────────┬──────────────┬───────────────────┬───────────────┬─────────────────────────────────────────────────────────┐
+20:21:46  │  Library  │ Vulnerability  │ Severity │    Status    │ Installed Version │ Fixed Version │                          Title                          │
+20:21:46  ├───────────┼────────────────┼──────────┼──────────────┼───────────────────┼───────────────┼─────────────────────────────────────────────────────────┤
+20:21:46  │ perl-base │ CVE-2026-42496 │ CRITICAL │ fix_deferred │ 5.40.1-6          │               │ perl-archive-tar: perl-archive-tar: Path traversal via  │
+20:21:46  │           │                │          │              │                   │               │ crafted symlinks allows arbitrary file access           │
+20:21:46  │           │                │          │              │                   │               │ https://avd.aquasec.com/nvd/cve-2026-42496              │
+20:21:46  │           ├────────────────┤          ├──────────────┤                   ├───────────────┼─────────────────────────────────────────────────────────┤
+20:21:46  │           │ CVE-2026-8376  │          │ affected     │                   │               │ perl: Perl: Heap buffer overflow when compiling regular │
+20:21:46  │           │                │          │              │                   │               │ expressions on 32-bit builds...                         │
+20:21:46  │           │                │          │              │                   │               │ https://avd.aquasec.com/nvd/cve-2026-8376               │
+20:21:46  └───────────┴────────────────┴──────────┴──────────────┴───────────────────┴───────────────┴─────────────────────────────────────────────────────────┘
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Archive CI Metadata)
+Stage "Archive CI Metadata" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
+20:21:47  + echo Final workspace status:
+20:21:47  Final workspace status:
+20:21:47  + ls -la
+20:21:47  total 80
+20:21:47  drwxr-xr-x 14 jenkins jenkins 4096 Jul  8 14:38 .
+20:21:47  drwxr-xr-x  8 jenkins jenkins 4096 Jul  8 14:38 ..
+20:21:47  -rw-r--r--  1 jenkins jenkins  443 Jul  8 14:38 .dockerignore
+20:21:47  drwxr-xr-x  8 jenkins jenkins 4096 Jul  8 14:51 .git
+20:21:47  -rw-r--r--  1 jenkins jenkins  442 Jul  8 14:38 .gitignore
+20:21:47  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 .pytest_cache
+20:21:47  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 .ruff_cache
+20:21:47  drwxr-xr-x  5 jenkins jenkins 4096 Jul  8 14:38 .venv
+20:21:47  -rw-r--r--  1 jenkins jenkins 5060 Jul  8 14:38 Jenkinsfile
+20:21:47  -rw-r--r--  1 jenkins jenkins 1449 Jul  8 14:38 README.md
+20:21:47  drwxr-xr-x  4 jenkins jenkins 4096 Jul  8 14:38 app
+20:21:47  drwxr-xr-x  2 jenkins jenkins 4096 Jul  8 14:38 docker
+20:21:47  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 docs
+20:21:47  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 jenkins
+20:21:47  drwxr-xr-x  7 jenkins jenkins 4096 Jul  8 14:38 k8s
+20:21:47  drwxr-xr-x  4 jenkins jenkins 4096 Jul  8 14:38 monitoring
+20:21:47  drwxr-xr-x  3 jenkins jenkins 4096 Jul  8 14:38 reports
+20:21:47  drwxr-xr-x  2 jenkins jenkins 4096 Jul  8 14:38 scripts
+20:21:47  -rw-r--r--  1 jenkins jenkins 1757 Jul  8 14:38 ~
+20:21:47  + echo Docker images for incident-api:
+20:21:47  Docker images for incident-api:
+20:21:47  + docker image ls incident-api
+20:21:47  IMAGE                       ID             DISK USAGE   CONTENT SIZE   EXTRA
+20:21:47  incident-api:ci-1-7eee3e5   24ce8755aab4        195MB             0B        
+20:21:47  incident-api:ci-2-7eee3e5   24ce8755aab4        195MB             0B        
+[Pipeline] echo
+20:21:47  CI pipeline failed. Check the failed stage and console output.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+20:21:47  
+[Pipeline] // ansiColor
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
+

@@ -1,0 +1,112 @@
+# ReleaseOps Phase 9
+# Local kind-cluster monitoring configuration.
+
+defaultRules:
+  create: true
+
+alertmanager:
+  enabled: true
+
+  alertmanagerSpec:
+    replicas: 1
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+grafana:
+  enabled: true
+
+  defaultDashboardsEnabled: true
+
+  timezone: browser
+
+  service:
+    type: ClusterIP
+
+  persistence:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  sidecar:
+    dashboards:
+      enabled: true
+
+      label: grafana_dashboard
+
+      labelValue: "1"
+
+      searchNamespace: ALL
+
+prometheus:
+  enabled: true
+
+  service:
+    type: ClusterIP
+
+  prometheusSpec:
+    replicas: 1
+
+    retention: 24h
+
+    scrapeInterval: 15s
+
+    evaluationInterval: 15s
+
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+prometheusOperator:
+  enabled: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+# The following control-plane metrics are disabled only because
+# this project runs on a local kind cluster.
+#
+# A managed production Kubernetes platform should be evaluated
+# separately before disabling these integrations.
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeProxy:
+  enabled: false

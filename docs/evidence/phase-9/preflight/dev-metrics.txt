@@ -1,0 +1,130 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 7905.0
+python_gc_objects_collected_total{generation="1"} 235.0
+python_gc_objects_collected_total{generation="2"} 0.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 121.0
+python_gc_collections_total{generation="1"} 10.0
+python_gc_collections_total{generation="2"} 0.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="12",patchlevel="13",version="3.12.13"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 2.4297472e+08
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 5.3747712e+07
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.78359245955e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 4.83
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 15.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1.073741816e+09
+# HELP incident_api_http_requests_total Total HTTP requests handled by incident-api.
+# TYPE incident_api_http_requests_total counter
+incident_api_http_requests_total{endpoint="/health",http_status="200",method="GET"} 84.0
+incident_api_http_requests_total{endpoint="/ready",http_status="200",method="GET"} 167.0
+incident_api_http_requests_total{endpoint="/incidents",http_status="200",method="GET"} 1.0
+incident_api_http_requests_total{endpoint="/metrics",http_status="200",method="GET"} 1.0
+# HELP incident_api_http_requests_created Total HTTP requests handled by incident-api.
+# TYPE incident_api_http_requests_created gauge
+incident_api_http_requests_created{endpoint="/health",http_status="200",method="GET"} 1.783592463372559e+09
+incident_api_http_requests_created{endpoint="/ready",http_status="200",method="GET"} 1.783592464168754e+09
+incident_api_http_requests_created{endpoint="/incidents",http_status="200",method="GET"} 1.7835924942080421e+09
+incident_api_http_requests_created{endpoint="/metrics",http_status="200",method="GET"} 1.7835924942199867e+09
+# HELP incident_api_http_request_duration_seconds HTTP request latency in seconds for incident-api.
+# TYPE incident_api_http_request_duration_seconds histogram
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.005",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.01",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.025",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.05",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.075",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.1",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.25",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.5",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="0.75",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="1.0",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="2.5",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="5.0",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="7.5",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="10.0",method="GET"} 84.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/health",le="+Inf",method="GET"} 84.0
+incident_api_http_request_duration_seconds_count{endpoint="/health",method="GET"} 84.0
+incident_api_http_request_duration_seconds_sum{endpoint="/health",method="GET"} 0.11160912399964218
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.005",method="GET"} 160.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.01",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.025",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.05",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.075",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.1",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.25",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.5",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="0.75",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="1.0",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="2.5",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="5.0",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="7.5",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="10.0",method="GET"} 167.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/ready",le="+Inf",method="GET"} 167.0
+incident_api_http_request_duration_seconds_count{endpoint="/ready",method="GET"} 167.0
+incident_api_http_request_duration_seconds_sum{endpoint="/ready",method="GET"} 0.2845970840062364
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.005",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.01",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.025",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.05",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.075",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.1",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.25",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="0.75",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="1.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="2.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="5.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="7.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="10.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/incidents",le="+Inf",method="GET"} 1.0
+incident_api_http_request_duration_seconds_count{endpoint="/incidents",method="GET"} 1.0
+incident_api_http_request_duration_seconds_sum{endpoint="/incidents",method="GET"} 0.0017767080003068259
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.005",method="GET"} 0.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.01",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.025",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.05",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.075",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.1",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.25",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="0.75",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="1.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="2.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="5.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="7.5",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="10.0",method="GET"} 1.0
+incident_api_http_request_duration_seconds_bucket{endpoint="/metrics",le="+Inf",method="GET"} 1.0
+incident_api_http_request_duration_seconds_count{endpoint="/metrics",method="GET"} 1.0
+incident_api_http_request_duration_seconds_sum{endpoint="/metrics",method="GET"} 0.0050326659998063406
+# HELP incident_api_http_request_duration_seconds_created HTTP request latency in seconds for incident-api.
+# TYPE incident_api_http_request_duration_seconds_created gauge
+incident_api_http_request_duration_seconds_created{endpoint="/health",method="GET"} 1.7835924633726187e+09
+incident_api_http_request_duration_seconds_created{endpoint="/ready",method="GET"} 1.7835924641688037e+09
+incident_api_http_request_duration_seconds_created{endpoint="/incidents",method="GET"} 1.7835924942081149e+09
+incident_api_http_request_duration_seconds_created{endpoint="/metrics",method="GET"} 1.7835924942199998e+09
+# HELP incident_api_open_incidents Number of currently open incidents.
+# TYPE incident_api_open_incidents gauge
+incident_api_open_incidents 1.0
+# HELP incident_api_app_info Application information exposed as a Prometheus metric.
+# TYPE incident_api_app_info gauge
+incident_api_app_info{app_name="incident-api",environment="dev",version="phase-5-6656334"} 1.0

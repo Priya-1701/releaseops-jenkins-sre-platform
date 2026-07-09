@@ -1,0 +1,50 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+
+metadata:
+  name: incident-api
+  namespace: monitoring
+
+  labels:
+    release: releaseops-monitoring
+
+    app.kubernetes.io/name: incident-api
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: releaseops
+
+spec:
+  jobLabel: app.kubernetes.io/name
+
+  namespaceSelector:
+    matchNames:
+      - incident-dev
+      - incident-staging
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: incident-api
+
+  endpoints:
+    - port: http
+
+      path: /metrics
+
+      scheme: http
+
+      interval: 15s
+
+      scrapeTimeout: 10s
+
+      honorLabels: false
+
+      relabelings:
+        - action: replace
+
+          sourceLabels:
+            - __meta_kubernetes_namespace
+
+          regex: incident-(.*)
+
+          replacement: $1
+
+          targetLabel: environment

@@ -1,0 +1,1 @@
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"namespace":"incident-dev"},"value":[1783599005.893,"0.004875834486751564"]},{"metric":{"namespace":"incident-staging"},"value":[1783599005.893,"0.004655095681618999"]}]}}

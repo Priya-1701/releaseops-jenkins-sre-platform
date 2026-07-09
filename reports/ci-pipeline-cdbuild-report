@@ -1,0 +1,888 @@
+Started by user Priyanka Sagalgile
+
+Obtained Jenkinsfile from git https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/releaseops-ci-pipeline
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] ansiColor
+[Pipeline] {
+15:50:00  
+[Pipeline] timeout
+15:50:00  Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Source)
+[Pipeline] cleanWs
+15:50:00  [WS-CLEANUP] Deleting project workspace...
+15:50:00  [WS-CLEANUP] Deferred wipeout is used...
+15:50:00  [WS-CLEANUP] done
+[Pipeline] checkout
+15:50:00  The recommended git tool is: git
+15:50:00  No credentials specified
+15:50:00  Cloning the remote Git repository
+15:50:00  Cloning repository https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+15:50:00   > git init /var/jenkins_home/workspace/releaseops-ci-pipeline # timeout=10
+15:50:00  Fetching upstream changes from https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git
+15:50:00   > git --version # timeout=10
+15:50:00   > git --version # 'git version 2.47.3'
+15:50:00   > git fetch --tags --force --progress -- https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+15:50:10   > git config remote.origin.url https://github.com/Priya-1701/releaseops-jenkins-sre-platform.git # timeout=10
+15:50:10   > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+15:50:10  Avoid second fetch
+15:50:10   > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+15:50:10  Checking out Revision 6c6f206fabf14810bd30de029f3b6a682c0e63b5 (refs/remotes/origin/main)
+15:50:10   > git config core.sparsecheckout # timeout=10
+15:50:11   > git checkout -f 6c6f206fabf14810bd30de029f3b6a682c0e63b5 # timeout=10
+15:50:11  Commit message: "feat: add Jenkins CD to dev and staging"
+15:50:11   > git rev-list --no-walk e32953cb8ed07288bdd6ecd2f7e527831ad7e479 # timeout=10
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
+15:50:11  + git rev-parse --short HEAD
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] sh
+15:50:11  + set -e
+15:50:11  + echo Current workspace:
+15:50:11  Current workspace:
+15:50:11  + pwd
+15:50:11  /var/jenkins_home/workspace/releaseops-ci-pipeline
+15:50:11  + echo Git commit:
+15:50:11  Git commit:
+15:50:11  + git rev-parse --short HEAD
+15:50:11  6c6f206
+15:50:11  + echo Versioned release image:
+15:50:11  Versioned release image:
+15:50:11  + echo docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:50:11  docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:50:11  + echo Repository files:
+15:50:11  Repository files:
+15:50:11  + ls -la
+15:50:11  total 84
+15:50:11  drwxr-xr-x 11 jenkins jenkins  4096 Jul  9 10:20 .
+15:50:11  drwxr-xr-x  8 jenkins jenkins  4096 Jul  9 10:20 ..
+15:50:11  -rw-r--r--  1 jenkins jenkins   443 Jul  9 10:20 .dockerignore
+15:50:11  drwxr-xr-x  8 jenkins jenkins  4096 Jul  9 10:20 .git
+15:50:11  -rw-r--r--  1 jenkins jenkins   442 Jul  9 10:20 .gitignore
+15:50:11  -rw-r--r--  1 jenkins jenkins 28015 Jul  9 10:20 Jenkinsfile
+15:50:11  -rw-r--r--  1 jenkins jenkins  1449 Jul  9 10:20 README.md
+15:50:11  drwxr-xr-x  3 jenkins jenkins  4096 Jul  9 10:20 app
+15:50:11  drwxr-xr-x  2 jenkins jenkins  4096 Jul  9 10:20 docker
+15:50:11  drwxr-xr-x  3 jenkins jenkins  4096 Jul  9 10:20 docs
+15:50:11  drwxr-xr-x  3 jenkins jenkins  4096 Jul  9 10:20 jenkins
+15:50:11  drwxr-xr-x  8 jenkins jenkins  4096 Jul  9 10:20 k8s
+15:50:11  drwxr-xr-x  4 jenkins jenkins  4096 Jul  9 10:20 monitoring
+15:50:11  drwxr-xr-x  3 jenkins jenkins  4096 Jul  9 10:20 reports
+15:50:11  drwxr-xr-x  2 jenkins jenkins  4096 Jul  9 10:20 scripts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Prepare Python Environment)
+[Pipeline] sh
+15:50:12  + set -e
+15:50:12  + rm -rf .venv
+15:50:12  + python3 -m venv .venv
+15:50:12  + . .venv/bin/activate
+15:50:12  + deactivate nondestructive
+15:50:12  + [ -n  ]
+15:50:12  + [ -n  ]
+15:50:12  + hash -r
+15:50:12  + [ -n  ]
+15:50:12  + unset VIRTUAL_ENV
+15:50:12  + unset VIRTUAL_ENV_PROMPT
+15:50:12  + [ ! nondestructive = nondestructive ]
+15:50:12  + uname
+15:50:12  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+15:50:12  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:12  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:12  + export PATH
+15:50:12  + VIRTUAL_ENV_PROMPT=.venv
+15:50:12  + export VIRTUAL_ENV_PROMPT
+15:50:12  + [ -n  ]
+15:50:12  + [ -z  ]
+15:50:12  + _OLD_VIRTUAL_PS1=$ 
+15:50:12  + PS1=(.venv) $ 
+15:50:12  + export PS1
+15:50:12  + hash -r
+15:50:12  + python -m pip install --upgrade pip
+15:50:13  Requirement already satisfied: pip in ./.venv/lib/python3.13/site-packages (25.1.1)
+15:50:13  Collecting pip
+15:50:13    Using cached pip-26.1.2-py3-none-any.whl.metadata (4.6 kB)
+15:50:13  Using cached pip-26.1.2-py3-none-any.whl (1.8 MB)
+15:50:13  Installing collected packages: pip
+15:50:13    Attempting uninstall: pip
+15:50:13      Found existing installation: pip 25.1.1
+15:50:13      Uninstalling pip-25.1.1:
+15:50:13        Successfully uninstalled pip-25.1.1
+15:50:13  Successfully installed pip-26.1.2
+15:50:13  + python -m pip install -r app/requirements-dev.txt
+15:50:13  Collecting fastapi (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:13    Using cached fastapi-0.139.0-py3-none-any.whl.metadata (26 kB)
+15:50:14  Collecting prometheus-client (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 3))
+15:50:14    Using cached prometheus_client-0.25.0-py3-none-any.whl.metadata (2.1 kB)
+15:50:14  Collecting pytest (from -r app/requirements-dev.txt (line 2))
+15:50:14    Using cached pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+15:50:14  Collecting httpx (from -r app/requirements-dev.txt (line 3))
+15:50:14    Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+15:50:14  Collecting ruff (from -r app/requirements-dev.txt (line 4))
+15:50:14    Using cached ruff-0.15.20-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (26 kB)
+15:50:14  Collecting uvicorn[standard] (from -r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached uvicorn-0.51.0-py3-none-any.whl.metadata (6.6 kB)
+15:50:14  Collecting starlette>=0.46.0 (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:14    Using cached starlette-1.3.1-py3-none-any.whl.metadata (6.4 kB)
+15:50:14  Collecting pydantic>=2.9.0 (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:14    Using cached pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+15:50:14  Collecting typing-extensions>=4.8.0 (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:14    Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+15:50:14  Collecting typing-inspection>=0.4.2 (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:14    Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+15:50:14  Collecting annotated-doc>=0.0.2 (from fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:14    Using cached annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+15:50:14  Collecting click>=7.0 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+15:50:14  Collecting h11>=0.8 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+15:50:14  Collecting httptools>=0.8.0 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached httptools-0.8.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (3.5 kB)
+15:50:14  Collecting python-dotenv>=0.13 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+15:50:14  Collecting pyyaml>=5.1 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached pyyaml-6.0.3-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.4 kB)
+15:50:14  Collecting uvloop>=0.15.1 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached uvloop-0.22.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (4.9 kB)
+15:50:14  Collecting watchfiles>=0.20 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:14    Using cached watchfiles-1.2.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (4.9 kB)
+15:50:15  Collecting websockets>=13.0 (from uvicorn[standard]->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 2))
+15:50:15    Using cached websockets-16.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (6.8 kB)
+15:50:15  Collecting iniconfig>=1.0.1 (from pytest->-r app/requirements-dev.txt (line 2))
+15:50:15    Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+15:50:15  Collecting packaging>=22 (from pytest->-r app/requirements-dev.txt (line 2))
+15:50:15    Using cached packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+15:50:15  Collecting pluggy<2,>=1.5 (from pytest->-r app/requirements-dev.txt (line 2))
+15:50:15    Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+15:50:15  Collecting pygments>=2.7.2 (from pytest->-r app/requirements-dev.txt (line 2))
+15:50:15    Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+15:50:15  Collecting anyio (from httpx->-r app/requirements-dev.txt (line 3))
+15:50:15    Using cached anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+15:50:15  Collecting certifi (from httpx->-r app/requirements-dev.txt (line 3))
+15:50:15    Using cached certifi-2026.6.17-py3-none-any.whl.metadata (2.5 kB)
+15:50:15  Collecting httpcore==1.* (from httpx->-r app/requirements-dev.txt (line 3))
+15:50:15    Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+15:50:15  Collecting idna (from httpx->-r app/requirements-dev.txt (line 3))
+15:50:15    Using cached idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+15:50:15  Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:15    Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+15:50:15  Collecting pydantic-core==2.46.4 (from pydantic>=2.9.0->fastapi->-r /var/jenkins_home/workspace/releaseops-ci-pipeline/app/requirements.txt (line 1))
+15:50:15    Using cached pydantic_core-2.46.4-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.6 kB)
+15:50:15  Using cached fastapi-0.139.0-py3-none-any.whl (130 kB)
+15:50:15  Using cached uvicorn-0.51.0-py3-none-any.whl (73 kB)
+15:50:15  Using cached prometheus_client-0.25.0-py3-none-any.whl (64 kB)
+15:50:15  Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
+15:50:15  Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+15:50:15  Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+15:50:15  Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+15:50:15  Using cached ruff-0.15.20-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (11.0 MB)
+15:50:15  Using cached annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+15:50:15  Using cached click-8.4.2-py3-none-any.whl (119 kB)
+15:50:15  Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+15:50:15  Using cached httptools-0.8.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (482 kB)
+15:50:15  Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+15:50:15  Using cached packaging-26.2-py3-none-any.whl (100 kB)
+15:50:15  Using cached pydantic-2.13.4-py3-none-any.whl (472 kB)
+15:50:15  Using cached pydantic_core-2.46.4-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
+15:50:15  Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+15:50:15  Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+15:50:15  Using cached python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+15:50:15  Using cached pyyaml-6.0.3-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (767 kB)
+15:50:15  Using cached starlette-1.3.1-py3-none-any.whl (73 kB)
+15:50:15  Using cached anyio-4.14.1-py3-none-any.whl (124 kB)
+15:50:15  Using cached idna-3.18-py3-none-any.whl (65 kB)
+15:50:15  Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+15:50:15  Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+15:50:15  Using cached uvloop-0.22.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (4.3 MB)
+15:50:15  Using cached watchfiles-1.2.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (452 kB)
+15:50:15  Using cached websockets-16.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (186 kB)
+15:50:15  Using cached certifi-2026.6.17-py3-none-any.whl (133 kB)
+15:50:15  Installing collected packages: websockets, uvloop, typing-extensions, ruff, pyyaml, python-dotenv, pygments, prometheus-client, pluggy, packaging, iniconfig, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pytest, pydantic-core, httpcore, anyio, watchfiles, starlette, pydantic, httpx, fastapi
+15:50:17  
+15:50:17  Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.14.1 certifi-2026.6.17 click-8.4.2 fastapi-0.139.0 h11-0.16.0 httpcore-1.0.9 httptools-0.8.0 httpx-0.28.1 idna-3.18 iniconfig-2.3.0 packaging-26.2 pluggy-1.6.0 prometheus-client-0.25.0 pydantic-2.13.4 pydantic-core-2.46.4 pygments-2.20.0 pytest-9.1.1 python-dotenv-1.2.2 pyyaml-6.0.3 ruff-0.15.20 starlette-1.3.1 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.51.0 uvloop-0.22.1 watchfiles-1.2.0 websockets-16.0
+15:50:17  + python -m pip freeze
+15:50:17  annotated-doc==0.0.4
+15:50:17  annotated-types==0.7.0
+15:50:17  anyio==4.14.1
+15:50:17  certifi==2026.6.17
+15:50:17  click==8.4.2
+15:50:17  fastapi==0.139.0
+15:50:17  h11==0.16.0
+15:50:17  httpcore==1.0.9
+15:50:17  httptools==0.8.0
+15:50:17  httpx==0.28.1
+15:50:17  idna==3.18
+15:50:17  iniconfig==2.3.0
+15:50:17  packaging==26.2
+15:50:17  pluggy==1.6.0
+15:50:17  prometheus_client==0.25.0
+15:50:17  pydantic==2.13.4
+15:50:17  pydantic_core==2.46.4
+15:50:17  Pygments==2.20.0
+15:50:17  pytest==9.1.1
+15:50:17  python-dotenv==1.2.2
+15:50:17  PyYAML==6.0.3
+15:50:17  ruff==0.15.20
+15:50:17  starlette==1.3.1
+15:50:17  typing-inspection==0.4.2
+15:50:17  typing_extensions==4.16.0
+15:50:17  uvicorn==0.51.0
+15:50:17  uvloop==0.22.1
+15:50:17  watchfiles==1.2.0
+15:50:17  websockets==16.0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Lint Code)
+[Pipeline] sh
+15:50:17  + set -e
+15:50:17  + . .venv/bin/activate
+15:50:17  + deactivate nondestructive
+15:50:17  + [ -n  ]
+15:50:17  + [ -n  ]
+15:50:17  + hash -r
+15:50:17  + [ -n  ]
+15:50:17  + unset VIRTUAL_ENV
+15:50:17  + unset VIRTUAL_ENV_PROMPT
+15:50:17  + [ ! nondestructive = nondestructive ]
+15:50:17  + uname
+15:50:17  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+15:50:17  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:17  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:17  + export PATH
+15:50:17  + VIRTUAL_ENV_PROMPT=.venv
+15:50:17  + export VIRTUAL_ENV_PROMPT
+15:50:17  + [ -n  ]
+15:50:17  + [ -z  ]
+15:50:17  + _OLD_VIRTUAL_PS1=$ 
+15:50:17  + PS1=(.venv) $ 
+15:50:17  + export PS1
+15:50:17  + hash -r
+15:50:17  + python -m ruff check app
+15:50:17  All checks passed!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Unit Tests)
+[Pipeline] sh
+15:50:17  + set -e
+15:50:17  + . .venv/bin/activate
+15:50:17  + deactivate nondestructive
+15:50:17  + [ -n  ]
+15:50:17  + [ -n  ]
+15:50:17  + hash -r
+15:50:17  + [ -n  ]
+15:50:17  + unset VIRTUAL_ENV
+15:50:17  + unset VIRTUAL_ENV_PROMPT
+15:50:17  + [ ! nondestructive = nondestructive ]
+15:50:17  + uname
+15:50:17  + export VIRTUAL_ENV=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv
+15:50:17  + _OLD_VIRTUAL_PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:17  + PATH=/var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15:50:17  + export PATH
+15:50:17  + VIRTUAL_ENV_PROMPT=.venv
+15:50:17  + export VIRTUAL_ENV_PROMPT
+15:50:17  + [ -n  ]
+15:50:17  + [ -z  ]
+15:50:17  + _OLD_VIRTUAL_PS1=$ 
+15:50:17  + PS1=(.venv) $ 
+15:50:17  + export PS1
+15:50:17  + hash -r
+15:50:17  + mkdir -p reports/ci
+15:50:17  + python -m pytest app/tests --junitxml=reports/ci/pytest-results.xml
+15:50:18  ============================= test session starts ==============================
+15:50:18  platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0
+15:50:18  rootdir: /var/jenkins_home/workspace/releaseops-ci-pipeline
+15:50:18  plugins: anyio-4.14.1
+15:50:18  collected 7 items
+15:50:18  
+15:50:18  app/tests/test_incident_api.py .......                                   [100%]
+15:50:18  
+15:50:18  =============================== warnings summary ===============================
+15:50:18  .venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+15:50:18    /var/jenkins_home/workspace/releaseops-ci-pipeline/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+15:50:18      from starlette.testclient import TestClient as TestClient  # noqa
+15:50:18  
+15:50:18  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+15:50:18  - generated xml file: /var/jenkins_home/workspace/releaseops-ci-pipeline/reports/ci/pytest-results.xml -
+15:50:18  ========================= 7 passed, 1 warning in 0.26s =========================
+Post stage
+[Pipeline] junit
+15:50:18  Recording test results
+15:50:18  [Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] sh
+15:50:18  + set -e
+15:50:18  + docker build -f docker/Dockerfile -t incident-api:ci-8-6c6f206 .
+15:50:18  DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+15:50:18              Install the buildx component to build images with BuildKit:
+15:50:18              https://docs.docker.com/go/buildx/
+15:50:18  
+15:50:18  Sending build context to Docker daemon  79.87kB
+15:50:18  
+15:50:18  Step 1/22 : FROM python:3.12-slim-bookworm
+15:50:18   ---> ff4554839bf3
+15:50:18  Step 2/22 : LABEL org.opencontainers.image.title="incident-api"
+15:50:18   ---> Using cache
+15:50:18   ---> 1b89e40b8755
+15:50:18  Step 3/22 : LABEL org.opencontainers.image.description="SRE-focused FastAPI workload for ReleaseOps Jenkins CI/CD platform"
+15:50:18   ---> Using cache
+15:50:18   ---> 72877fca2b79
+15:50:18  Step 4/22 : LABEL org.opencontainers.image.source="releaseops-jenkins-sre-platform"
+15:50:18   ---> Using cache
+15:50:18   ---> 86b3f6543442
+15:50:18  Step 5/22 : LABEL org.opencontainers.image.vendor="ReleaseOps"
+15:50:18   ---> Using cache
+15:50:18   ---> a682a4b00591
+15:50:18  Step 6/22 : LABEL org.opencontainers.image.version="0.1.0"
+15:50:18   ---> Using cache
+15:50:18   ---> cb2bd7893add
+15:50:18  Step 7/22 : ENV PYTHONDONTWRITEBYTECODE=1
+15:50:18   ---> Using cache
+15:50:18   ---> 3781772d7261
+15:50:18  Step 8/22 : ENV PYTHONUNBUFFERED=1
+15:50:18   ---> Using cache
+15:50:18   ---> 857fc3036320
+15:50:18  Step 9/22 : ENV APP_NAME=incident-api
+15:50:18   ---> Using cache
+15:50:18   ---> 32819d3801ba
+15:50:18  Step 10/22 : ENV APP_VERSION=0.1.0
+15:50:18   ---> Using cache
+15:50:18   ---> bc46f579a5cd
+15:50:18  Step 11/22 : ENV APP_ENV=container
+15:50:18   ---> Using cache
+15:50:18   ---> 10838cfc0424
+15:50:18  Step 12/22 : ENV PORT=8000
+15:50:18   ---> Using cache
+15:50:18   ---> 24cb63cf1202
+15:50:18  Step 13/22 : WORKDIR /service
+15:50:18   ---> Using cache
+15:50:18   ---> 753371dc4e49
+15:50:18  Step 14/22 : RUN addgroup --system appgroup     && adduser --system --ingroup appgroup --home /service appuser
+15:50:18   ---> Using cache
+15:50:18   ---> fa2b80297b29
+15:50:18  Step 15/22 : COPY app/requirements.txt /service/app/requirements.txt
+15:50:18   ---> Using cache
+15:50:18   ---> 9bf33b6095b4
+15:50:18  Step 16/22 : RUN python -m pip install --no-cache-dir --upgrade pip     && python -m pip install --no-cache-dir -r /service/app/requirements.txt
+15:50:18   ---> Using cache
+15:50:18   ---> 3b048760c4a0
+15:50:18  Step 17/22 : COPY app /service/app
+15:50:18   ---> d460ffaacf8e
+15:50:18  Step 18/22 : RUN chown -R appuser:appgroup /service
+15:50:18   ---> Running in cc8a0e62c8c5
+15:50:18   ---> Removed intermediate container cc8a0e62c8c5
+15:50:18   ---> a66d906f9ea9
+15:50:18  Step 19/22 : USER appuser
+15:50:18   ---> Running in 6c04722c8d43
+15:50:18   ---> Removed intermediate container 6c04722c8d43
+15:50:18   ---> 1af2523ff391
+15:50:18  Step 20/22 : EXPOSE 8000
+15:50:18   ---> Running in 87ad4dc76bee
+15:50:18   ---> Removed intermediate container 87ad4dc76bee
+15:50:18   ---> 51627c57a7e7
+15:50:18  Step 21/22 : HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)" || exit 1
+15:50:18   ---> Running in a654a2e46e79
+15:50:18   ---> Removed intermediate container a654a2e46e79
+15:50:18   ---> 3cf2f5f10a74
+15:50:18  Step 22/22 : CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+15:50:19   ---> Running in a940ffa9057f
+15:50:19   ---> Removed intermediate container a940ffa9057f
+15:50:19   ---> e572b9313e1f
+15:50:19  Successfully built e572b9313e1f
+15:50:19  Successfully tagged incident-api:ci-8-6c6f206
+15:50:19  + docker image inspect incident-api:ci-8-6c6f206
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Scan Docker Image)
+[Pipeline] sh
+15:50:19  + set -e
+15:50:19  + mkdir -p reports/ci
+15:50:19  + trivy image --exit-code 0 --severity HIGH,CRITICAL --no-progress --format json --output reports/ci/trivy-image-report.json incident-api:ci-8-6c6f206
+15:50:19  2026-07-09T10:20:19Z	INFO	[vuln] Vulnerability scanning is enabled
+15:50:19  2026-07-09T10:20:19Z	INFO	[secret] Secret scanning is enabled
+15:50:19  2026-07-09T10:20:19Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+15:50:19  2026-07-09T10:20:19Z	INFO	[secret] Please see https://trivy.dev/docs/v0.72/guide/scanner/secret#recommendation for faster secret detection
+15:50:20  2026-07-09T10:20:20Z	INFO	Detected OS	family="debian" version="12.14"
+15:50:20  2026-07-09T10:20:20Z	INFO	[debian] Detecting vulnerabilities...	os_version="12" pkg_num=105
+15:50:20  2026-07-09T10:20:20Z	INFO	Number of language-specific files	num=1
+15:50:20  2026-07-09T10:20:20Z	INFO	[python-pkg] Detecting vulnerabilities...
+15:50:20  2026-07-09T10:20:20Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.72/guide/scanner/vulnerability#severity-selection for details.
+15:50:20  + trivy image --scanners vuln --ignore-unfixed --exit-code 1 --severity CRITICAL --no-progress --format table incident-api:ci-8-6c6f206
+15:50:20  2026-07-09T10:20:20Z	INFO	[vuln] Vulnerability scanning is enabled
+15:50:21  2026-07-09T10:20:21Z	INFO	Detected OS	family="debian" version="12.14"
+15:50:21  2026-07-09T10:20:21Z	INFO	[debian] Detecting vulnerabilities...	os_version="12" pkg_num=105
+15:50:21  2026-07-09T10:20:21Z	INFO	Number of language-specific files	num=1
+15:50:21  2026-07-09T10:20:21Z	INFO	[python-pkg] Detecting vulnerabilities...
+15:50:21  2026-07-09T10:20:21Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.72/guide/scanner/vulnerability#severity-selection for details.
+15:50:21  
+15:50:21  Report Summary
+15:50:21  
+15:50:21  ┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┐
+15:50:21  │                                      Target                                      │    Type    │ Vulnerabilities │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ incident-api:ci-8-6c6f206 (debian 12.14)                                         │   debian   │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/annotated_doc-0.0.4.dist-info/METADATA    │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/annotated_types-0.7.0.dist-info/METADATA  │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/anyio-4.14.1.dist-info/METADATA           │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/click-8.4.2.dist-info/METADATA            │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/fastapi-0.139.0.dist-info/METADATA        │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/h11-0.16.0.dist-info/METADATA             │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/httptools-0.8.0.dist-info/METADATA        │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/idna-3.18.dist-info/METADATA              │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/pip-26.1.2.dist-info/METADATA             │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/prometheus_client-0.25.0.dist-info/METAD- │ python-pkg │        0        │
+15:50:21  │ ATA                                                                              │            │                 │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/pydantic-2.13.4.dist-info/METADATA        │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/pydantic_core-2.46.4.dist-info/METADATA   │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/python_dotenv-1.2.2.dist-info/METADATA    │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/pyyaml-6.0.3.dist-info/METADATA           │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/starlette-1.3.1.dist-info/METADATA        │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/typing_extensions-4.16.0.dist-info/METAD- │ python-pkg │        0        │
+15:50:21  │ ATA                                                                              │            │                 │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/typing_inspection-0.4.2.dist-info/METADA- │ python-pkg │        0        │
+15:50:21  │ TA                                                                               │            │                 │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/uvicorn-0.51.0.dist-info/METADATA         │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/uvloop-0.22.1.dist-info/METADATA          │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/watchfiles-1.2.0.dist-info/METADATA       │ python-pkg │        0        │
+15:50:21  ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┤
+15:50:21  │ usr/local/lib/python3.12/site-packages/websockets-16.0.dist-info/METADATA        │ python-pkg │        0        │
+15:50:21  └──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┘
+15:50:21  Legend:
+15:50:21  - '-': Not scanned
+15:50:21  - '0': Clean (no security findings detected)
+15:50:21  
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Tag DockerHub Images)
+[Pipeline] sh
+15:50:21  + set -e
+15:50:21  + docker tag incident-api:ci-8-6c6f206 docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:50:21  + docker tag incident-api:ci-8-6c6f206 docker.io/priyanka1701/incident-api:latest
+15:50:21  + docker image ls docker.io/priyanka1701/incident-api
+15:50:21  IMAGE                                    ID             DISK USAGE   CONTENT SIZE   EXTRA
+15:50:21  priyanka1701/incident-api:ci-5-a9390fa   8f350148b500        200MB             0B        
+15:50:21  priyanka1701/incident-api:ci-6-a9390fa   b5f11109eb8a        200MB             0B        
+15:50:21  priyanka1701/incident-api:ci-7-e32953c   9276c7e69b78        200MB             0B        
+15:50:21  priyanka1701/incident-api:ci-8-6c6f206   e572b9313e1f        200MB             0B        
+15:50:21  priyanka1701/incident-api:latest         e572b9313e1f        200MB             0B        
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Docker Image to DockerHub)
+[Pipeline] retry
+[Pipeline] {
+[Pipeline] withCredentials
+15:50:22  Masking supported pattern matches of $DOCKERHUB_TOKEN
+[Pipeline] {
+[Pipeline] sh
+15:50:22  + set +x
+15:50:24  
+15:50:24  WARNING! Your credentials are stored unencrypted in '/var/jenkins_home/workspace/releaseops-ci-pipeline/.docker/config.json'.
+15:50:24  Configure a credential helper to remove this warning. See
+15:50:24  https://docs.docker.com/go/credential-store/
+15:50:24  
+15:50:24  Login Succeeded
+15:50:24  The push refers to repository [docker.io/priyanka1701/incident-api]
+15:50:25  57db415bce77: Preparing
+15:50:25  6decfa114dfc: Preparing
+15:50:25  14d60a3ee435: Preparing
+15:50:25  8e9ee15a62c6: Preparing
+15:50:25  7858b47152a0: Preparing
+15:50:25  71fccdab4e66: Preparing
+15:50:25  b44d4c87ff0f: Preparing
+15:50:25  0df45a152976: Preparing
+15:50:25  0a4b010bf43d: Preparing
+15:50:25  5b9cd2976ab9: Preparing
+15:50:25  71fccdab4e66: Waiting
+15:50:25  0a4b010bf43d: Waiting
+15:50:25  0df45a152976: Waiting
+15:50:25  5b9cd2976ab9: Waiting
+15:50:25  b44d4c87ff0f: Waiting
+15:50:27  14d60a3ee435: Layer already exists
+15:50:27  7858b47152a0: Layer already exists
+15:50:27  8e9ee15a62c6: Layer already exists
+15:50:27  71fccdab4e66: Layer already exists
+15:50:27  b44d4c87ff0f: Layer already exists
+15:50:27  0df45a152976: Layer already exists
+15:50:27  0a4b010bf43d: Layer already exists
+15:50:27  5b9cd2976ab9: Layer already exists
+15:50:29  57db415bce77: Pushed
+15:50:29  6decfa114dfc: Pushed
+15:50:33  ci-8-6c6f206: digest: sha256:eaa9ab2597b3c803e1f29be4e3c059581d4bcccd319e3e90ed80cbccd6109505 size: 2409
+15:50:33  The push refers to repository [docker.io/priyanka1701/incident-api]
+15:50:34  57db415bce77: Preparing
+15:50:34  6decfa114dfc: Preparing
+15:50:34  14d60a3ee435: Preparing
+15:50:34  8e9ee15a62c6: Preparing
+15:50:34  7858b47152a0: Preparing
+15:50:34  71fccdab4e66: Preparing
+15:50:34  b44d4c87ff0f: Preparing
+15:50:34  0df45a152976: Preparing
+15:50:34  0a4b010bf43d: Preparing
+15:50:34  5b9cd2976ab9: Preparing
+15:50:34  71fccdab4e66: Waiting
+15:50:34  b44d4c87ff0f: Waiting
+15:50:34  0df45a152976: Waiting
+15:50:34  0a4b010bf43d: Waiting
+15:50:34  5b9cd2976ab9: Waiting
+15:50:35  8e9ee15a62c6: Layer already exists
+15:50:35  14d60a3ee435: Layer already exists
+15:50:35  7858b47152a0: Layer already exists
+15:50:35  6decfa114dfc: Layer already exists
+15:50:35  57db415bce77: Layer already exists
+15:50:35  71fccdab4e66: Layer already exists
+15:50:35  b44d4c87ff0f: Layer already exists
+15:50:35  0df45a152976: Layer already exists
+15:50:35  0a4b010bf43d: Layer already exists
+15:50:35  5b9cd2976ab9: Layer already exists
+15:50:38  latest: digest: sha256:eaa9ab2597b3c803e1f29be4e3c059581d4bcccd319e3e90ed80cbccd6109505 size: 2409
+15:50:38  DockerHub push completed successfully.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // retry
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate Kubernetes Access)
+[Pipeline] withCredentials
+15:50:38  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:50:38  + set -e
+15:50:38  + export KUBECONFIG=****
+15:50:38  + echo Checking dev deployment access...
+15:50:38  Checking dev deployment access...
+15:50:38  + kubectl auth can-i patch deployments.apps -n incident-dev
+15:50:38  + DEV_ACCESS=yes
+15:50:38  + test yes = yes
+15:50:38  + echo Checking staging deployment access...
+15:50:38  Checking staging deployment access...
+15:50:38  + kubectl auth can-i patch deployments.apps -n incident-staging
+15:50:38  + STAGING_ACCESS=yes
+15:50:38  + test yes = yes
+15:50:38  + echo Confirming production access is denied...
+15:50:38  Confirming production access is denied...
+15:50:38  + kubectl auth can-i patch deployments.apps -n incident-prod
+15:50:38  + true
+15:50:38  + PROD_ACCESS=no
+15:50:38  + test no = no
+15:50:38  + kubectl -n incident-dev get deployment incident-api
+15:50:38  NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+15:50:38  incident-api   2/2     2            2           22h
+15:50:38  + kubectl -n incident-staging get deployment incident-api
+15:50:38  NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+15:50:38  incident-api   2/2     2            2           21h
+15:50:38  + echo Kubernetes access validation passed.
+15:50:38  Kubernetes access validation passed.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to Dev)
+[Pipeline] withCredentials
+15:50:38  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:50:39  + set -e
+15:50:39  + export KUBECONFIG=****
+15:50:39  + mkdir -p reports/cd
+15:50:39  + kubectl -n incident-dev get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:50:39  + PREVIOUS_IMAGE=docker.io/priyanka1701/incident-api:phase-5-6656334
+15:50:39  + echo docker.io/priyanka1701/incident-api:phase-5-6656334
+15:50:39  + kubectl -n incident-dev annotate deployment incident-api releaseops.io/build-number=8 releaseops.io/git-sha=6c6f206 releaseops.io/image-tag=ci-8-6c6f206 --overwrite
+15:50:39  deployment.apps/incident-api annotated
+15:50:39  + kubectl -n incident-dev set image deployment/incident-api incident-api=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:50:39  deployment.apps/incident-api image updated
+15:50:39  + kubectl -n incident-dev rollout status deployment/incident-api --timeout=180s
+15:50:39  Waiting for deployment "incident-api" rollout to finish: 0 out of 2 new replicas have been updated...
+15:50:39  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+15:51:05  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+15:51:05  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+15:51:05  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+15:51:05  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+
+15:51:32  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+15:51:32  deployment "incident-api" successfully rolled out
+15:51:32  + kubectl -n incident-dev get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:51:32  + ACTUAL_IMAGE=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:32  + test docker.io/priyanka1701/incident-api:ci-8-6c6f206 = docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:32  + echo docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:32  + kubectl -n incident-dev get deployment incident-api -o yaml
+15:51:32  + kubectl -n incident-dev get pods -o wide
+15:51:32  + kubectl -n incident-dev rollout history deployment/incident-api
+15:51:32  + echo Dev deployment completed successfully.
+15:51:32  Dev deployment completed successfully.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke Test Dev)
+[Pipeline] withCredentials
+15:51:32  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:51:32  + set -e
+15:51:32  + export KUBECONFIG=****
+15:51:32  + mkdir -p reports/cd
+15:51:32  + PORT_FORWARD_PID=2252
+15:51:32  + trap cleanup_port_forward EXIT INT TERM
+15:51:32  + DEV_HEALTHY=false
+15:51:32  + kubectl -n incident-dev port-forward service/incident-api 18080:80
+15:51:32  + seq 1 30
+15:51:32  + curl --fail --silent --show-error --connect-timeout 2 --max-time 5 -o reports/cd/dev-health.json http://127.0.0.1:18080/health
+15:51:32  curl: (7) Failed to connect to 127.0.0.1 port 18080 after 0 ms: Could not connect to server
+15:51:32  + echo Waiting for dev application. Attempt 1/30
+15:51:32  Waiting for dev application. Attempt 1/30
+15:51:32  + sleep 2
+
+15:51:34  + curl --fail --silent --show-error --connect-timeout 2 --max-time 5 -o reports/cd/dev-health.json http://127.0.0.1:18080/health
+15:51:34  + DEV_HEALTHY=true
+15:51:34  + break
+15:51:34  + [ true != true ]
+15:51:34  + curl --fail --silent --show-error --max-time 10 -o reports/cd/dev-ready.json http://127.0.0.1:18080/ready
+15:51:34  + curl --fail --silent --show-error --max-time 10 -o reports/cd/dev-incidents.json http://127.0.0.1:18080/incidents
+15:51:34  + curl --fail --silent --show-error --max-time 10 -o reports/cd/dev-metrics.txt http://127.0.0.1:18080/metrics
+15:51:34  + grep -q incident_api_app_info reports/cd/dev-metrics.txt
+15:51:34  + echo Dev health response:
+15:51:34  Dev health response:
+15:51:34  + jq . reports/cd/dev-health.json
+15:51:34  {
+15:51:34    "status": "healthy",
+15:51:34    "service": "incident-api",
+15:51:34    "version": "phase-5-6656334",
+15:51:34    "environment": "dev",
+15:51:34    "uptime_seconds": 33.42
+15:51:34  }
+15:51:34  + echo Dev readiness response:
+15:51:34  Dev readiness response:
+15:51:34  + jq . reports/cd/dev-ready.json
+15:51:34  {
+15:51:34    "status": "ready",
+15:51:34    "service": "incident-api",
+15:51:34    "checks": {
+15:51:34      "configuration_loaded": true,
+15:51:34      "incident_store_available": true
+15:51:34    }
+15:51:34  }
+15:51:34  + echo Dev smoke test passed.
+15:51:34  Dev smoke test passed.
+15:51:34  + cleanup_port_forward
+15:51:34  + kill 2252
+15:51:34  + wait 2252
+15:51:34  + true
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to Staging)
+[Pipeline] withCredentials
+15:51:34  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:51:34  + set -e
+15:51:34  + export KUBECONFIG=****
+15:51:34  + mkdir -p reports/cd
+15:51:34  + kubectl -n incident-staging get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:51:34  + PREVIOUS_IMAGE=docker.io/priyanka1701/incident-api:phase-5-6656334
+15:51:34  + echo docker.io/priyanka1701/incident-api:phase-5-6656334
+15:51:34  + kubectl -n incident-staging annotate deployment incident-api releaseops.io/build-number=8 releaseops.io/git-sha=6c6f206 releaseops.io/image-tag=ci-8-6c6f206 --overwrite
+15:51:34  deployment.apps/incident-api annotated
+15:51:34  + kubectl -n incident-staging set image deployment/incident-api incident-api=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:34  deployment.apps/incident-api image updated
+15:51:34  + kubectl -n incident-staging rollout status deployment/incident-api --timeout=180s
+15:51:34  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+
+15:51:39  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+15:51:39  Waiting for deployment "incident-api" rollout to finish: 1 out of 2 new replicas have been updated...
+15:51:39  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+15:51:39  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+
+15:51:45  Waiting for deployment "incident-api" rollout to finish: 1 old replicas are pending termination...
+15:51:45  deployment "incident-api" successfully rolled out
+15:51:45  + kubectl -n incident-staging get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:51:45  + ACTUAL_IMAGE=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:45  + test docker.io/priyanka1701/incident-api:ci-8-6c6f206 = docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:45  + echo docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:45  + kubectl -n incident-staging get deployment incident-api -o yaml
+15:51:45  + kubectl -n incident-staging get pods -o wide
+15:51:45  + kubectl -n incident-staging rollout history deployment/incident-api
+15:51:45  + echo Staging deployment completed successfully.
+15:51:45  Staging deployment completed successfully.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke Test Staging)
+[Pipeline] withCredentials
+15:51:45  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:51:45  + set -e
+15:51:45  + export KUBECONFIG=****
+15:51:45  + mkdir -p reports/cd
+15:51:45  + PORT_FORWARD_PID=2393
+15:51:45  + trap cleanup_port_forward EXIT INT TERM
+15:51:45  + STAGING_HEALTHY=false
+15:51:45  + seq 1 30
+15:51:45  + kubectl -n incident-staging port-forward service/incident-api 18081:80
+15:51:45  + curl --fail --silent --show-error --connect-timeout 2 --max-time 5 -o reports/cd/staging-health.json http://127.0.0.1:18081/health
+15:51:45  curl: (7) Failed to connect to 127.0.0.1 port 18081 after 0 ms: Could not connect to server
+15:51:45  + echo Waiting for staging application. Attempt 1/30
+15:51:45  Waiting for staging application. Attempt 1/30
+15:51:45  + sleep 2
+
+15:51:47  + curl --fail --silent --show-error --connect-timeout 2 --max-time 5 -o reports/cd/staging-health.json http://127.0.0.1:18081/health
+15:51:47  + STAGING_HEALTHY=true
+15:51:47  + break
+15:51:47  + [ true != true ]
+15:51:47  + curl --fail --silent --show-error --max-time 10 -o reports/cd/staging-ready.json http://127.0.0.1:18081/ready
+15:51:47  + curl --fail --silent --show-error --max-time 10 -o reports/cd/staging-incidents.json http://127.0.0.1:18081/incidents
+15:51:47  + curl --fail --silent --show-error --max-time 10 -o reports/cd/staging-metrics.txt http://127.0.0.1:18081/metrics
+15:51:47  + grep -q incident_api_app_info reports/cd/staging-metrics.txt
+15:51:47  + echo Staging health response:
+15:51:47  Staging health response:
+15:51:47  + jq . reports/cd/staging-health.json
+15:51:47  {
+15:51:47    "status": "healthy",
+15:51:47    "service": "incident-api",
+15:51:47    "version": "phase-5-6656334",
+15:51:47    "environment": "staging",
+15:51:47    "uptime_seconds": 11.23
+15:51:47  }
+15:51:47  + echo Staging readiness response:
+15:51:47  Staging readiness response:
+15:51:47  + jq . reports/cd/staging-ready.json
+15:51:47  {
+15:51:47    "status": "ready",
+15:51:47    "service": "incident-api",
+15:51:47    "checks": {
+15:51:47      "configuration_loaded": true,
+15:51:47      "incident_store_available": true
+15:51:47    }
+15:51:47  }
+15:51:47  + echo Staging smoke test passed.
+15:51:47  Staging smoke test passed.
+15:51:47  + cleanup_port_forward
+15:51:47  + kill 2393
+15:51:47  + wait 2393
+15:51:47  + true
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Archive Release Metadata)
+[Pipeline] withCredentials
+15:51:47  Masking supported pattern matches of $KUBECONFIG_FILE
+[Pipeline] {
+[Pipeline] sh
+15:51:47  + set -e
+15:51:47  + export KUBECONFIG=****
+15:51:47  + mkdir -p reports/ci reports/cd
+15:51:47  + kubectl -n incident-dev get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:51:47  + DEV_IMAGE=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:47  + kubectl -n incident-staging get deployment incident-api -o jsonpath={.spec.template.spec.containers[0].image}
+15:51:47  + STAGING_IMAGE=docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:47  + test docker.io/priyanka1701/incident-api:ci-8-6c6f206 = docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:47  + test docker.io/priyanka1701/incident-api:ci-8-6c6f206 = docker.io/priyanka1701/incident-api:ci-8-6c6f206
+15:51:47  + cat
+15:51:47  + cat
+15:51:47  + echo Release metadata:
+15:51:47  Release metadata:
+15:51:47  + jq . reports/cd/release-metadata.json
+15:51:47  {
+15:51:47    "application": "incident-api",
+15:51:47    "jenkins_build_number": "8",
+15:51:47    "git_commit_short": "6c6f206",
+15:51:47    "promoted_image": "docker.io/priyanka1701/incident-api:ci-8-6c6f206",
+15:51:47    "dev_namespace": "incident-dev",
+15:51:47    "dev_image": "docker.io/priyanka1701/incident-api:ci-8-6c6f206",
+15:51:47    "dev_smoke_test": "passed",
+15:51:47    "staging_namespace": "incident-staging",
+15:51:47    "staging_image": "docker.io/priyanka1701/incident-api:ci-8-6c6f206",
+15:51:47    "staging_smoke_test": "passed",
+15:51:47    "production_deployed": false,
+15:51:47    "result": "success"
+15:51:47  }
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] archiveArtifacts
+15:51:47  Archiving artifacts
+15:51:47  Recording fingerprints
+[Pipeline] echo
+15:51:47  
+15:51:47  ReleaseOps CI/CD pipeline completed successfully.
+15:51:47  
+15:51:47  The same immutable Docker image passed:
+15:51:47  - CI validation
+15:51:47  - Docker security scanning
+15:51:47  - DockerHub publication
+15:51:47  - Dev deployment
+15:51:47  - Dev smoke testing
+15:51:47  - Staging deployment
+15:51:47  - Staging smoke testing
+15:51:47  
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+15:51:47  
+[Pipeline] // ansiColor
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+
+Finished: SUCCESS
+

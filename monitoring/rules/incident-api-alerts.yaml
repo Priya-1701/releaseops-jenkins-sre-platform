@@ -1,0 +1,220 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+
+metadata:
+  name: incident-api-alerts
+  namespace: monitoring
+
+  labels:
+    release: releaseops-monitoring
+
+    app.kubernetes.io/name: incident-api
+    app.kubernetes.io/component: alerting
+    app.kubernetes.io/part-of: releaseops
+
+spec:
+  groups:
+    - name: releaseops.incident-api.availability
+
+      interval: 30s
+
+      rules:
+        - alert: IncidentAPITargetUnavailable
+
+          expr: |
+            min by (namespace) (
+              up{
+                job="incident-api",
+                namespace=~"incident-dev|incident-staging"
+              }
+            ) == 0
+
+          for: 2m
+
+          labels:
+            severity: critical
+            service: incident-api
+            team: sre
+
+          annotations:
+            summary: "incident-api target unavailable in {{ $labels.namespace }}"
+
+            description: |
+              At least one incident-api Prometheus target in
+              {{ $labels.namespace }} has been unavailable for more
+              than 2 minutes.
+
+            impact: |
+              Prometheus cannot scrape one or more incident-api targets.
+              Application availability or observability may be degraded.
+
+            runbook: |
+              Check the incident-api Deployment, Pods, Service,
+              Endpoints, readiness probes, and ServiceMonitor target.
+
+    - name: releaseops.incident-api.http
+
+      interval: 30s
+
+      rules:
+        - alert: IncidentAPIHighHTTP5xxErrorRate
+
+          expr: |
+            (
+              100
+              *
+              sum by (namespace) (
+                rate(
+                  incident_api_http_requests_total{
+                    namespace=~"incident-dev|incident-staging",
+                    http_status=~"5.."
+                  }[5m]
+                )
+              )
+              /
+              clamp_min(
+                sum by (namespace) (
+                  rate(
+                    incident_api_http_requests_total{
+                      namespace=~"incident-dev|incident-staging"
+                    }[5m]
+                  )
+                ),
+                0.000001
+              )
+            ) > 5
+
+          for: 2m
+
+          labels:
+            severity: critical
+            service: incident-api
+            team: sre
+
+          annotations:
+            summary: "High incident-api HTTP 5xx rate in {{ $labels.namespace }}"
+
+            description: |
+              More than 5 percent of incident-api requests in
+              {{ $labels.namespace }} have returned HTTP 5xx responses
+              for more than 2 minutes.
+
+            impact: |
+              Users may be receiving failed requests.
+
+            runbook: |
+              Check recent releases, application logs, exception rates,
+              pod health, dependencies, and the /simulate/error endpoint.
+
+        - alert: IncidentAPIHighP95Latency
+
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (
+                namespace,
+                le
+              ) (
+                rate(
+                  incident_api_http_request_duration_seconds_bucket{
+                    namespace=~"incident-dev|incident-staging"
+                  }[5m]
+                )
+              )
+            ) > 1
+
+          for: 3m
+
+          labels:
+            severity: warning
+            service: incident-api
+            team: sre
+
+          annotations:
+            summary: "High incident-api p95 latency in {{ $labels.namespace }}"
+
+            description: |
+              The incident-api p95 request latency in
+              {{ $labels.namespace }} has remained above 1 second
+              for more than 3 minutes.
+
+            impact: |
+              Users may experience slow API responses.
+
+            runbook: |
+              Check endpoint-level latency, CPU, memory, pod saturation,
+              downstream dependencies, and recent deployments.
+
+    - name: releaseops.incident-api.kubernetes
+
+      interval: 30s
+
+      rules:
+        - alert: IncidentAPIDeploymentReplicasUnavailable
+
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace=~"incident-dev|incident-staging",
+              deployment="incident-api"
+            }
+            <
+            kube_deployment_spec_replicas{
+              namespace=~"incident-dev|incident-staging",
+              deployment="incident-api"
+            }
+
+          for: 2m
+
+          labels:
+            severity: critical
+            service: incident-api
+            team: sre
+
+          annotations:
+            summary: "incident-api replicas unavailable in {{ $labels.namespace }}"
+
+            description: |
+              The number of available incident-api replicas in
+              {{ $labels.namespace }} is lower than the desired replica
+              count for more than 2 minutes.
+
+            impact: |
+              Application capacity and availability may be reduced.
+
+            runbook: |
+              Check Deployment rollout status, ReplicaSets, Pods,
+              scheduling events, image pulls, readiness probes,
+              resource limits, and node health.
+
+        - alert: IncidentAPIContainerRestarting
+
+          expr: |
+            increase(
+              kube_pod_container_status_restarts_total{
+                namespace=~"incident-dev|incident-staging",
+                pod=~"incident-api-.*",
+                container="incident-api"
+              }[10m]
+            ) > 0
+
+          for: 1m
+
+          labels:
+            severity: warning
+            service: incident-api
+            team: sre
+
+          annotations:
+            summary: "incident-api container restarted in {{ $labels.namespace }}"
+
+            description: |
+              The incident-api container in pod {{ $labels.pod }}
+              restarted during the last 10 minutes.
+
+            impact: |
+              Repeated restarts may cause intermittent request failures
+              and reduced application capacity.
+
+            runbook: |
+              Check container logs, previous logs, pod events,
+              exit codes, OOMKilled status, probes, and resource usage.

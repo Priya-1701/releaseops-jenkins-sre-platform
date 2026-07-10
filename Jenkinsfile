@@ -449,7 +449,8 @@ pipeline {
 
                         MONITORING_PORT_FORWARD_ACCESS="$(
                           kubectl auth can-i \
-                            create pods/portforward \
+                            create pods \
+                            --subresource=portforward \
                             -n "${MONITORING_NAMESPACE}"
                         )"
 

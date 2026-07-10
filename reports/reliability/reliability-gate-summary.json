@@ -1,0 +1,23 @@
+{
+  "gate_status": "PASSED",
+  "evaluated_at": "2026-07-10T08:43:16Z",
+  "application": "incident-api",
+  "namespace": "incident-staging",
+  "thresholds": {
+    "minimum_availability_percent": 100,
+    "minimum_ready_replicas_percent": 100,
+    "maximum_http_5xx_percent": 5,
+    "maximum_p95_latency_seconds": 1,
+    "maximum_container_restarts": 0,
+    "maximum_firing_critical_alerts": 0
+  },
+  "measurements": {
+    "availability_percent": 100,
+    "ready_replicas_percent": 100,
+    "http_5xx_percent": 0,
+    "p95_latency_seconds": 0.004776565693830504,
+    "container_restarts": 0,
+    "firing_critical_alerts": 0
+  },
+  "failed_checks": 0
+}

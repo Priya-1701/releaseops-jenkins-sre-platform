@@ -3,39 +3,91 @@ pipeline {
 
     options {
         timestamps()
+
         ansiColor('xterm')
+
         disableConcurrentBuilds()
-        buildDiscarder(logRotator(numToKeepStr: '20'))
-        timeout(time: 60, unit: 'MINUTES')
+
+        buildDiscarder(
+            logRotator(
+                numToKeepStr: '20'
+            )
+        )
+
+        timeout(
+            time: 60,
+            unit: 'MINUTES'
+        )
+
         skipDefaultCheckout(true)
     }
 
     environment {
         APP_NAME = 'incident-api'
+
         PYTHON_VENV = '.venv'
 
         DOCKER_IMAGE_LOCAL = 'incident-api'
-        DOCKERHUB_REPOSITORY = 'docker.io/priyanka1701/incident-api'
 
-        CI_REPORT_DIR = 'reports/ci'
-        CD_REPORT_DIR = 'reports/cd'
+        DOCKERHUB_REPOSITORY =
+            'docker.io/priyanka1701/incident-api'
 
-        DEV_NAMESPACE = 'incident-dev'
-        STAGING_NAMESPACE = 'incident-staging'
+        CI_REPORT_DIR =
+            'reports/ci'
 
-        TRIVY_DISABLE_VEX_NOTICE = 'true'
+        CD_REPORT_DIR =
+            'reports/cd'
+
+        RELIABILITY_REPORT_DIR =
+            'reports/reliability'
+
+        DEV_NAMESPACE =
+            'incident-dev'
+
+        STAGING_NAMESPACE =
+            'incident-staging'
+
+        MONITORING_NAMESPACE =
+            'monitoring'
+
+        MONITORING_RELEASE =
+            'releaseops-monitoring'
+
+        MIN_AVAILABILITY_PERCENT =
+            '100'
+
+        MIN_READY_REPLICAS_PERCENT =
+            '100'
+
+        MAX_HTTP_5XX_PERCENT =
+            '5'
+
+        MAX_P95_LATENCY_SECONDS =
+            '1'
+
+        MAX_CONTAINER_RESTARTS =
+            '0'
+
+        MAX_FIRING_CRITICAL_ALERTS =
+            '0'
+
+        TRIVY_DISABLE_VEX_NOTICE =
+            'true'
     }
 
     stages {
         stage('Checkout Source') {
             steps {
                 cleanWs()
+
                 checkout scm
 
                 script {
                     env.GIT_SHORT_SHA = sh(
-                        script: 'git rev-parse --short HEAD',
-                        returnStdout: true
+                        script:
+                            'git rev-parse --short HEAD',
+                        returnStdout:
+                            true
                     ).trim()
 
                     env.IMAGE_TAG =
@@ -74,18 +126,30 @@ pipeline {
                 sh '''
                     set -e
 
-                    rm -rf "${PYTHON_VENV}"
+                    rm -rf \
+                      "${PYTHON_VENV}"
 
-                    python3 -m venv "${PYTHON_VENV}"
+                    python3 \
+                      -m venv \
+                      "${PYTHON_VENV}"
 
-                    . "${PYTHON_VENV}/bin/activate"
+                    . \
+                      "${PYTHON_VENV}/bin/activate"
 
-                    python -m pip install --upgrade pip
+                    python \
+                      -m pip \
+                      install \
+                      --upgrade \
+                      pip
 
-                    python -m pip install \
+                    python \
+                      -m pip \
+                      install \
                       -r app/requirements-dev.txt
 
-                    python -m pip freeze
+                    python \
+                      -m pip \
+                      freeze
                 '''
             }
         }
@@ -95,9 +159,13 @@ pipeline {
                 sh '''
                     set -e
 
-                    . "${PYTHON_VENV}/bin/activate"
+                    . \
+                      "${PYTHON_VENV}/bin/activate"
 
-                    python -m ruff check app
+                    python \
+                      -m ruff \
+                      check \
+                      app
                 '''
             }
         }
@@ -107,11 +175,14 @@ pipeline {
                 sh '''
                     set -e
 
-                    . "${PYTHON_VENV}/bin/activate"
+                    . \
+                      "${PYTHON_VENV}/bin/activate"
 
-                    mkdir -p "${CI_REPORT_DIR}"
+                    mkdir -p \
+                      "${CI_REPORT_DIR}"
 
-                    python -m pytest \
+                    python \
+                      -m pytest \
                       app/tests \
                       --junitxml="${CI_REPORT_DIR}/pytest-results.xml"
                 '''
@@ -120,8 +191,11 @@ pipeline {
             post {
                 always {
                     junit(
-                        allowEmptyResults: false,
-                        testResults: 'reports/ci/pytest-results.xml'
+                        allowEmptyResults:
+                            false,
+
+                        testResults:
+                            'reports/ci/pytest-results.xml'
                     )
                 }
             }
@@ -140,6 +214,12 @@ pipeline {
                     docker image inspect \
                       "${LOCAL_IMAGE}" \
                       >/dev/null
+
+                    echo \
+                      "Docker image built successfully."
+
+                    echo \
+                      "Local image: ${LOCAL_IMAGE}"
                 '''
             }
         }
@@ -149,7 +229,11 @@ pipeline {
                 sh '''
                     set -e
 
-                    mkdir -p "${CI_REPORT_DIR}"
+                    mkdir -p \
+                      "${CI_REPORT_DIR}"
+
+                    echo \
+                      "Generating the complete HIGH and CRITICAL vulnerability report..."
 
                     trivy image \
                       --exit-code 0 \
@@ -160,6 +244,9 @@ pipeline {
                       "${CI_REPORT_DIR}/trivy-image-report.json" \
                       "${LOCAL_IMAGE}"
 
+                    echo \
+                      "Running the blocking CRITICAL vulnerability gate..."
+
                     trivy image \
                       --scanners vuln \
                       --ignore-unfixed \
@@ -168,6 +255,9 @@ pipeline {
                       --no-progress \
                       --format table \
                       "${LOCAL_IMAGE}"
+
+                    echo \
+                      "Docker image security gate passed."
                 '''
             }
         }
@@ -187,6 +277,15 @@ pipeline {
 
                     docker image ls \
                       "${DOCKERHUB_REPOSITORY}"
+
+                    echo \
+                      "DockerHub image tags created."
+
+                    echo \
+                      "Immutable image: ${REGISTRY_IMAGE}"
+
+                    echo \
+                      "Convenience image: ${REGISTRY_IMAGE_LATEST}"
                 '''
             }
         }
@@ -196,15 +295,19 @@ pipeline {
                 retry(3) {
                     withCredentials([
                         usernamePassword(
-                            credentialsId: 'dockerhub-creds',
+                            credentialsId:
+                                'dockerhub-creds',
+
                             usernameVariable:
                                 'DOCKERHUB_USERNAME',
+
                             passwordVariable:
                                 'DOCKERHUB_TOKEN'
                         )
                     ]) {
                         sh '''
                             set +x
+
                             set -e
 
                             export DOCKER_CONFIG=\
@@ -233,11 +336,11 @@ pipeline {
 
                             echo \
                               "${DOCKERHUB_TOKEN}" \
-                              | docker login \
-                                  docker.io \
-                                  -u \
-                                  "${DOCKERHUB_USERNAME}" \
-                                  --password-stdin
+                            | docker login \
+                                docker.io \
+                                -u \
+                                "${DOCKERHUB_USERNAME}" \
+                                --password-stdin
 
                             docker push \
                               "${REGISTRY_IMAGE}"
@@ -259,6 +362,7 @@ pipeline {
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -280,7 +384,8 @@ pipeline {
 
                         test \
                           "${DEV_ACCESS}" \
-                          = "yes"
+                          = \
+                          "yes"
 
                         echo \
                           "Checking staging deployment access..."
@@ -293,21 +398,80 @@ pipeline {
 
                         test \
                           "${STAGING_ACCESS}" \
-                          = "yes"
+                          = \
+                          "yes"
 
                         echo \
-                          "Confirming production access is denied..."
+                          "Confirming production deployment access is denied..."
 
                         PROD_ACCESS="$(
                           kubectl auth can-i \
                             patch deployments.apps \
                             -n incident-prod \
-                          || true
+                            || true
                         )"
 
                         test \
                           "${PROD_ACCESS}" \
-                          = "no"
+                          = \
+                          "no"
+
+                        echo \
+                          "Checking monitoring Service access..."
+
+                        MONITORING_SERVICE_ACCESS="$(
+                          kubectl auth can-i \
+                            get services \
+                            -n "${MONITORING_NAMESPACE}"
+                        )"
+
+                        test \
+                          "${MONITORING_SERVICE_ACCESS}" \
+                          = \
+                          "yes"
+
+                        echo \
+                          "Checking monitoring Pod access..."
+
+                        MONITORING_POD_ACCESS="$(
+                          kubectl auth can-i \
+                            list pods \
+                            -n "${MONITORING_NAMESPACE}"
+                        )"
+
+                        test \
+                          "${MONITORING_POD_ACCESS}" \
+                          = \
+                          "yes"
+
+                        echo \
+                          "Checking monitoring port-forward access..."
+
+                        MONITORING_PORT_FORWARD_ACCESS="$(
+                          kubectl auth can-i \
+                            create pods/portforward \
+                            -n "${MONITORING_NAMESPACE}"
+                        )"
+
+                        test \
+                          "${MONITORING_PORT_FORWARD_ACCESS}" \
+                          = \
+                          "yes"
+
+                        echo \
+                          "Confirming monitoring Secret access is denied..."
+
+                        MONITORING_SECRET_ACCESS="$(
+                          kubectl auth can-i \
+                            get secrets \
+                            -n "${MONITORING_NAMESPACE}" \
+                            || true
+                        )"
+
+                        test \
+                          "${MONITORING_SECRET_ACCESS}" \
+                          = \
+                          "no"
 
                         kubectl \
                           -n "${DEV_NAMESPACE}" \
@@ -319,8 +483,12 @@ pipeline {
                           get deployment \
                           "${APP_NAME}"
 
+                        kubectl \
+                          -n "${MONITORING_NAMESPACE}" \
+                          get services
+
                         echo \
-                          "Kubernetes access validation passed."
+                          "Kubernetes least-privilege access validation passed."
                     '''
                 }
             }
@@ -332,6 +500,7 @@ pipeline {
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -356,8 +525,11 @@ pipeline {
 
                         echo \
                           "${PREVIOUS_IMAGE}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-previous-image.txt"
+
+                        echo \
+                          "Previous dev image: ${PREVIOUS_IMAGE}"
 
                         kubectl \
                           -n "${DEV_NAMESPACE}" \
@@ -400,7 +572,7 @@ pipeline {
 
                         echo \
                           "${ACTUAL_IMAGE}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-deployed-image.txt"
 
                         kubectl \
@@ -408,22 +580,25 @@ pipeline {
                           get deployment \
                           "${APP_NAME}" \
                           -o yaml \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-deployment.yaml"
 
                         kubectl \
                           -n "${DEV_NAMESPACE}" \
                           get pods \
                           -o wide \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-pods.txt"
 
                         kubectl \
                           -n "${DEV_NAMESPACE}" \
                           rollout history \
                           deployment/"${APP_NAME}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-rollout-history.txt"
+
+                        echo \
+                          "Dev deployed image: ${ACTUAL_IMAGE}"
 
                         echo \
                           "Dev deployment completed successfully."
@@ -438,6 +613,7 @@ pipeline {
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -456,7 +632,7 @@ pipeline {
                           port-forward \
                           service/"${APP_NAME}" \
                           18080:80 \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/dev-port-forward.log" \
                           2>&1 &
 
@@ -495,6 +671,7 @@ pipeline {
                             http://127.0.0.1:18080/health
                           then
                             DEV_HEALTHY=true
+
                             break
                           fi
 
@@ -570,6 +747,7 @@ pipeline {
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -594,8 +772,11 @@ pipeline {
 
                         echo \
                           "${PREVIOUS_IMAGE}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-previous-image.txt"
+
+                        echo \
+                          "Previous staging image: ${PREVIOUS_IMAGE}"
 
                         kubectl \
                           -n "${STAGING_NAMESPACE}" \
@@ -638,7 +819,7 @@ pipeline {
 
                         echo \
                           "${ACTUAL_IMAGE}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-deployed-image.txt"
 
                         kubectl \
@@ -646,22 +827,25 @@ pipeline {
                           get deployment \
                           "${APP_NAME}" \
                           -o yaml \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-deployment.yaml"
 
                         kubectl \
                           -n "${STAGING_NAMESPACE}" \
                           get pods \
                           -o wide \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-pods.txt"
 
                         kubectl \
                           -n "${STAGING_NAMESPACE}" \
                           rollout history \
                           deployment/"${APP_NAME}" \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-rollout-history.txt"
+
+                        echo \
+                          "Staging deployed image: ${ACTUAL_IMAGE}"
 
                         echo \
                           "Staging deployment completed successfully."
@@ -676,6 +860,7 @@ pipeline {
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -694,7 +879,7 @@ pipeline {
                           port-forward \
                           service/"${APP_NAME}" \
                           18081:80 \
-                          > \
+                        > \
 "${CD_REPORT_DIR}/staging-port-forward.log" \
                           2>&1 &
 
@@ -733,6 +918,7 @@ pipeline {
                             http://127.0.0.1:18081/health
                           then
                             STAGING_HEALTHY=true
+
                             break
                           fi
 
@@ -802,12 +988,310 @@ pipeline {
             }
         }
 
+        stage('SRE Reliability Gate') {
+            steps {
+                withCredentials([
+                    file(
+                        credentialsId:
+                            'releaseops-kubeconfig',
+
+                        variable:
+                            'KUBECONFIG_FILE'
+                    )
+                ]) {
+                    sh '''
+                        set -e
+
+                        export KUBECONFIG=\
+"${KUBECONFIG_FILE}"
+
+                        rm -rf \
+                          "${RELIABILITY_REPORT_DIR}"
+
+                        mkdir -p \
+                          "${RELIABILITY_REPORT_DIR}"
+
+                        echo \
+                          "Discovering the Prometheus Service..."
+
+                        PROMETHEUS_SERVICE="$(
+                          kubectl \
+                            -n "${MONITORING_NAMESPACE}" \
+                            get service \
+                            -l \
+"release=${MONITORING_RELEASE}" \
+                            -o json \
+                          | jq \
+                            -r '
+                              .items[]
+
+                              | select(
+                                  any(
+                                    .spec.ports[]?;
+                                    .port == 9090
+                                  )
+                                )
+
+                              | .metadata.name
+                            ' \
+                          | head -n 1
+                        )"
+
+                        test \
+                          -n \
+                          "${PROMETHEUS_SERVICE}"
+
+                        echo \
+                          "Prometheus Service: ${PROMETHEUS_SERVICE}"
+
+                        PROMETHEUS_PORT_FORWARD_PID=""
+
+                        STAGING_PORT_FORWARD_PID=""
+
+                        cleanup_reliability_gate() {
+                          if \
+                            [ -n "${PROMETHEUS_PORT_FORWARD_PID}" ]
+                          then
+                            kill \
+                              "${PROMETHEUS_PORT_FORWARD_PID}" \
+                              >/dev/null \
+                              2>&1 \
+                              || true
+
+                            wait \
+                              "${PROMETHEUS_PORT_FORWARD_PID}" \
+                              2>/dev/null \
+                              || true
+                          fi
+
+                          if \
+                            [ -n "${STAGING_PORT_FORWARD_PID}" ]
+                          then
+                            kill \
+                              "${STAGING_PORT_FORWARD_PID}" \
+                              >/dev/null \
+                              2>&1 \
+                              || true
+
+                            wait \
+                              "${STAGING_PORT_FORWARD_PID}" \
+                              2>/dev/null \
+                              || true
+                          fi
+                        }
+
+                        trap \
+                          cleanup_reliability_gate \
+                          EXIT INT TERM
+
+                        echo \
+                          "Starting the Jenkins-to-Prometheus port-forward..."
+
+                        kubectl \
+                          -n "${MONITORING_NAMESPACE}" \
+                          port-forward \
+                          service/"${PROMETHEUS_SERVICE}" \
+                          19090:9090 \
+                        > \
+"${RELIABILITY_REPORT_DIR}/prometheus-port-forward.log" \
+                          2>&1 &
+
+                        PROMETHEUS_PORT_FORWARD_PID=$!
+
+                        PROMETHEUS_READY=false
+
+                        for ATTEMPT in \
+                          $(seq 1 30)
+                        do
+                          if curl \
+                            --fail \
+                            --silent \
+                            --show-error \
+                            --connect-timeout 2 \
+                            --max-time 5 \
+                            http://127.0.0.1:19090/-/ready \
+                            >/dev/null
+                          then
+                            PROMETHEUS_READY=true
+
+                            break
+                          fi
+
+                          echo \
+                            "Waiting for Prometheus. Attempt ${ATTEMPT}/30"
+
+                          sleep 2
+                        done
+
+                        if \
+                          [ "${PROMETHEUS_READY}" != "true" ]
+                        then
+                          echo \
+                            "Prometheus did not become ready."
+
+                          cat \
+"${RELIABILITY_REPORT_DIR}/prometheus-port-forward.log"
+
+                          exit 1
+                        fi
+
+                        echo \
+                          "Prometheus is ready."
+
+                        echo \
+                          "Starting the staging validation port-forward..."
+
+                        kubectl \
+                          -n "${STAGING_NAMESPACE}" \
+                          port-forward \
+                          service/"${APP_NAME}" \
+                          18082:80 \
+                        > \
+"${RELIABILITY_REPORT_DIR}/staging-validation-port-forward.log" \
+                          2>&1 &
+
+                        STAGING_PORT_FORWARD_PID=$!
+
+                        STAGING_READY=false
+
+                        for ATTEMPT in \
+                          $(seq 1 30)
+                        do
+                          if curl \
+                            --fail \
+                            --silent \
+                            --show-error \
+                            --connect-timeout 2 \
+                            --max-time 5 \
+                            http://127.0.0.1:18082/ready \
+                            >/dev/null
+                          then
+                            STAGING_READY=true
+
+                            break
+                          fi
+
+                          echo \
+                            "Waiting for the staging validation endpoint. Attempt ${ATTEMPT}/30"
+
+                          sleep 2
+                        done
+
+                        if \
+                          [ "${STAGING_READY}" != "true" ]
+                        then
+                          echo \
+                            "The staging validation endpoint did not become ready."
+
+                          cat \
+"${RELIABILITY_REPORT_DIR}/staging-validation-port-forward.log"
+
+                          exit 1
+                        fi
+
+                        echo \
+                          "Generating controlled healthy staging validation traffic..."
+
+                        for REQUEST_NUMBER in \
+                          $(seq 1 20)
+                        do
+                          curl \
+                            --fail \
+                            --silent \
+                            --show-error \
+                            --max-time 10 \
+                            --output /dev/null \
+                            http://127.0.0.1:18082/health
+
+                          curl \
+                            --fail \
+                            --silent \
+                            --show-error \
+                            --max-time 10 \
+                            --output /dev/null \
+                            http://127.0.0.1:18082/ready
+
+                          curl \
+                            --fail \
+                            --silent \
+                            --show-error \
+                            --max-time 10 \
+                            --output /dev/null \
+                            http://127.0.0.1:18082/incidents
+                        done
+
+                        echo \
+                          "Controlled staging validation traffic completed."
+
+                        echo \
+                          "Waiting 45 seconds for Prometheus to collect fresh release samples..."
+
+                        sleep 45
+
+                        echo \
+                          "Running the ReleaseOps SRE Reliability Gate..."
+
+                        PROMETHEUS_URL=\
+"http://127.0.0.1:19090" \
+                        RELIABILITY_NAMESPACE=\
+"${STAGING_NAMESPACE}" \
+                        APP_NAME=\
+"${APP_NAME}" \
+                        REPORT_DIR=\
+"${RELIABILITY_REPORT_DIR}" \
+                        MIN_AVAILABILITY_PERCENT=\
+"${MIN_AVAILABILITY_PERCENT}" \
+                        MIN_READY_REPLICAS_PERCENT=\
+"${MIN_READY_REPLICAS_PERCENT}" \
+                        MAX_HTTP_5XX_PERCENT=\
+"${MAX_HTTP_5XX_PERCENT}" \
+                        MAX_P95_LATENCY_SECONDS=\
+"${MAX_P95_LATENCY_SECONDS}" \
+                        MAX_CONTAINER_RESTARTS=\
+"${MAX_CONTAINER_RESTARTS}" \
+                        MAX_FIRING_CRITICAL_ALERTS=\
+"${MAX_FIRING_CRITICAL_ALERTS}" \
+                        bash \
+                          ./scripts/run_reliability_gate.sh
+
+                        test \
+                          -f \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-summary.json"
+
+                        test \
+                          -f \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-status.txt"
+
+                        RELIABILITY_GATE_STATUS="$(
+                          cat \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-status.txt"
+                        )"
+
+                        test \
+                          "${RELIABILITY_GATE_STATUS}" \
+                          = \
+                          "PASSED"
+
+                        echo \
+                          "Reliability gate result:"
+
+                        jq . \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-summary.json"
+
+                        echo \
+                          "SRE Reliability Gate completed successfully."
+                    '''
+                }
+            }
+        }
+
         stage('Archive Release Metadata') {
             steps {
                 withCredentials([
                     file(
                         credentialsId:
                             'releaseops-kubeconfig',
+
                         variable:
                             'KUBECONFIG_FILE'
                     )
@@ -820,7 +1304,8 @@ pipeline {
 
                         mkdir -p \
                           "${CI_REPORT_DIR}" \
-                          "${CD_REPORT_DIR}"
+                          "${CD_REPORT_DIR}" \
+                          "${RELIABILITY_REPORT_DIR}"
 
                         DEV_IMAGE="$(
                           kubectl \
@@ -850,45 +1335,162 @@ pipeline {
                           = \
                           "${REGISTRY_IMAGE}"
 
-                        cat > \
-"${CI_REPORT_DIR}/build-metadata.json" \
-<<JSON
-{
-  "application": "${APP_NAME}",
-  "jenkins_build_number": "${BUILD_NUMBER}",
-  "git_commit_short": "${GIT_SHORT_SHA}",
-  "local_image": "${LOCAL_IMAGE}",
-  "registry_image": "${REGISTRY_IMAGE}",
-  "latest_image": "${REGISTRY_IMAGE_LATEST}",
-  "pipeline_type": "ci-cd",
-  "result": "success"
-}
-JSON
+                        RELIABILITY_GATE_STATUS="$(
+                          jq \
+                            -r \
+                            '.gate_status' \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-summary.json"
+                        )"
 
-                        cat > \
-"${CD_REPORT_DIR}/release-metadata.json" \
-<<JSON
-{
-  "application": "${APP_NAME}",
-  "jenkins_build_number": "${BUILD_NUMBER}",
-  "git_commit_short": "${GIT_SHORT_SHA}",
-  "promoted_image": "${REGISTRY_IMAGE}",
-  "dev_namespace": "${DEV_NAMESPACE}",
-  "dev_image": "${DEV_IMAGE}",
-  "dev_smoke_test": "passed",
-  "staging_namespace": "${STAGING_NAMESPACE}",
-  "staging_image": "${STAGING_IMAGE}",
-  "staging_smoke_test": "passed",
-  "production_deployed": false,
-  "result": "success"
-}
-JSON
+                        test \
+                          "${RELIABILITY_GATE_STATUS}" \
+                          = \
+                          "PASSED"
+
+                        jq \
+                          -n \
+                          --arg \
+                          application \
+                          "${APP_NAME}" \
+                          --arg \
+                          jenkins_build_number \
+                          "${BUILD_NUMBER}" \
+                          --arg \
+                          git_commit_short \
+                          "${GIT_SHORT_SHA}" \
+                          --arg \
+                          local_image \
+                          "${LOCAL_IMAGE}" \
+                          --arg \
+                          registry_image \
+                          "${REGISTRY_IMAGE}" \
+                          --arg \
+                          latest_image \
+                          "${REGISTRY_IMAGE_LATEST}" \
+                          '
+                          {
+                            application:
+                              $application,
+
+                            jenkins_build_number:
+                              $jenkins_build_number,
+
+                            git_commit_short:
+                              $git_commit_short,
+
+                            local_image:
+                              $local_image,
+
+                            registry_image:
+                              $registry_image,
+
+                            latest_image:
+                              $latest_image,
+
+                            pipeline_type:
+                              "ci-cd-sre-reliability-gated",
+
+                            result:
+                              "success"
+                          }
+                          ' \
+                        > \
+"${CI_REPORT_DIR}/build-metadata.json"
+
+                        jq \
+                          -n \
+                          --arg \
+                          application \
+                          "${APP_NAME}" \
+                          --arg \
+                          jenkins_build_number \
+                          "${BUILD_NUMBER}" \
+                          --arg \
+                          git_commit_short \
+                          "${GIT_SHORT_SHA}" \
+                          --arg \
+                          promoted_image \
+                          "${REGISTRY_IMAGE}" \
+                          --arg \
+                          dev_namespace \
+                          "${DEV_NAMESPACE}" \
+                          --arg \
+                          dev_image \
+                          "${DEV_IMAGE}" \
+                          --arg \
+                          staging_namespace \
+                          "${STAGING_NAMESPACE}" \
+                          --arg \
+                          staging_image \
+                          "${STAGING_IMAGE}" \
+                          --arg \
+                          staging_reliability_gate \
+                          "${RELIABILITY_GATE_STATUS}" \
+                          --arg \
+                          reliability_evidence \
+"${RELIABILITY_REPORT_DIR}/reliability-gate-summary.json" \
+                          '
+                          {
+                            application:
+                              $application,
+
+                            jenkins_build_number:
+                              $jenkins_build_number,
+
+                            git_commit_short:
+                              $git_commit_short,
+
+                            promoted_image:
+                              $promoted_image,
+
+                            dev_namespace:
+                              $dev_namespace,
+
+                            dev_image:
+                              $dev_image,
+
+                            dev_smoke_test:
+                              "passed",
+
+                            staging_namespace:
+                              $staging_namespace,
+
+                            staging_image:
+                              $staging_image,
+
+                            staging_smoke_test:
+                              "passed",
+
+                            staging_reliability_gate:
+                              $staging_reliability_gate,
+
+                            reliability_evidence:
+                              $reliability_evidence,
+
+                            production_deployed:
+                              false,
+
+                            result:
+                              "success"
+                          }
+                          ' \
+                        > \
+"${CD_REPORT_DIR}/release-metadata.json"
+
+                        echo \
+                          "Build metadata:"
+
+                        jq . \
+"${CI_REPORT_DIR}/build-metadata.json"
 
                         echo \
                           "Release metadata:"
 
                         jq . \
 "${CD_REPORT_DIR}/release-metadata.json"
+
+                        echo \
+                          "Release metadata archived successfully."
                     '''
                 }
             }
@@ -901,13 +1503,19 @@ JSON
 ReleaseOps CI/CD pipeline completed successfully.
 
 The same immutable Docker image passed:
+
 - CI validation
+- Unit testing
 - Docker security scanning
 - DockerHub publication
 - Dev deployment
 - Dev smoke testing
 - Staging deployment
 - Staging smoke testing
+- Prometheus SRE reliability gate
+
+The release remains blocked from production until the later
+production-promotion phase is implemented.
 '''
         }
 
@@ -916,16 +1524,27 @@ The same immutable Docker image passed:
 ReleaseOps CI/CD pipeline failed.
 
 The pipeline stopped before further promotion.
-Review the failed stage and archived evidence.
+
+Review:
+
+- The failed Jenkins stage
+- Console output
+- CI evidence
+- CD evidence
+- Reliability-gate evidence
 '''
         }
 
         always {
             archiveArtifacts(
                 artifacts:
-                    'reports/ci/*,reports/cd/*',
-                fingerprint: true,
-                allowEmptyArchive: true
+                    'reports/ci/*,reports/cd/*,reports/reliability/*',
+
+                fingerprint:
+                    true,
+
+                allowEmptyArchive:
+                    true
             )
         }
     }
